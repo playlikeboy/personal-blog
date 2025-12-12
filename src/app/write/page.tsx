@@ -48,19 +48,25 @@ export default function WritePage() {
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans">
             {/* Minimal Header */}
-            <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
-                <Container className="flex h-16 items-center justify-between">
+            <header className="sticky top-0 z-50 w-full bg-background/50 backdrop-blur-md border-b border-gray-100/50">
+                <Container className="flex h-14 items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
-                            <ArrowLeftIcon className="h-5 w-5" />
+                        <Link
+                            href="/"
+                            className="group flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors"
+                        >
+                            <ArrowLeftIcon className="h-4 w-4 text-gray-500 group-hover:text-foreground transition-colors" />
                         </Link>
-                        <span className="text-sm text-muted-foreground">Draft in <span className="text-foreground font-medium">Shaswat&apos;s Blog</span></span>
+                        <span className="text-sm text-gray-400">Draft in <span className="text-foreground font-medium">Shaswat&apos;s Blog</span></span>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                        <p className="text-xs text-gray-400 hidden sm:block mr-2">
+                            {isSaving ? "Saving..." : "Saved"}
+                        </p>
                         <Button
                             size="sm"
-                            className="rounded-full px-4"
+                            className="rounded-full px-5 font-medium"
                             onClick={handleSave}
                             isLoading={isSaving}
                             disabled={!title}
@@ -72,19 +78,19 @@ export default function WritePage() {
                 </Container>
             </header>
 
-            <main className="flex-1 py-10">
+            <main className="flex-1 py-12 md:py-20 lg:py-24">
                 <Container className="max-w-3xl">
-                    <div className="space-y-4">
+                    <div className="space-y-8">
                         <input
                             type="text"
-                            placeholder="Title"
-                            className="w-full bg-transparent text-4xl md:text-5xl font-bold placeholder:text-muted-foreground/40 border-none focus:ring-0 p-0"
+                            placeholder="Title..."
+                            className="w-full bg-transparent text-4xl md:text-5xl font-bold placeholder:text-gray-300 border-none focus:ring-0 p-0 tracking-tight"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             autoFocus
                         />
                         <div className="min-h-[500px]">
-                            <PlateEditor 
+                            <PlateEditor
                                 initialValue={content}
                                 onChange={setContent}
                             />
