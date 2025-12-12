@@ -3,70 +3,49 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
-import { Button } from "rizzui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
-
 import { UserButton } from "@stackframe/stack";
 
 export function Header() {
     const pathname = usePathname();
 
+    const navItems = [
+        { label: "Home", href: "/" },
+        { label: "Feed", href: "/feed" },
+        { label: "Authors", href: "/authors" },
+        { label: "About", href: "/about" },
+    ];
+
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-muted bg-background/80 backdrop-blur-md">
+        <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
             <Container className="flex h-16 items-center justify-between">
-                <Link href="/" className="flex items-center gap-2">
-                    <span className="text-xl font-bold tracking-tight">Minimal.</span>
+                <Link href="/" className="font-bold tracking-tighter text-xl">
+                    Minimal.
                 </Link>
-                <nav className="hidden md:flex items-center gap-6">
-                    <Link
-                        href="/"
-                        className={cn(
-                            "text-sm font-medium transition-colors hover:text-foreground",
-                            pathname === "/" ? "text-foreground" : "text-gray-500"
-                        )}
-                    >
-                        Home
-                    </Link>
-                    <Link
-                        href="/feed"
-                        className={cn(
-                            "text-sm font-medium transition-colors hover:text-foreground",
-                            pathname === "/feed" ? "text-foreground" : "text-gray-500"
-                        )}
-                    >
-                        Feed
-                    </Link>
-                    <Link
-                        href="/authors"
-                        className={cn(
-                            "text-sm font-medium transition-colors hover:text-foreground",
-                            pathname === "/authors" ? "text-foreground" : "text-gray-500"
-                        )}
-                    >
-                        Authors
-                    </Link>
-                    <Link
-                        href="/about"
-                        className={cn(
-                            "text-sm font-medium transition-colors hover:text-foreground",
-                            pathname === "/about" ? "text-foreground" : "text-gray-500"
-                        )}
-                    >
-                        About
-                    </Link>
-                </nav>
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                        <button aria-label="Search" className="rounded-full p-2 hover:bg-gray-100 transition-colors">
-                            <MagnifyingGlassIcon className="h-5 w-5" />
-                        </button>
-                        <Link href="/write">
-                            <Button size="sm" className="hidden sm:inline-flex rounded-full">
-                                Write
-                            </Button>
+
+                <nav className="hidden md:flex items-center gap-8">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={cn(
+                                "text-sm font-medium transition-colors hover:text-foreground",
+                                pathname === item.href ? "text-foreground" : "text-muted-foreground"
+                            )}
+                        >
+                            {item.label}
                         </Link>
-                    </div>
+                    ))}
+                </nav>
+
+                <div className="flex items-center gap-4">
+                    <button aria-label="Search" className="text-muted-foreground hover:text-foreground transition-colors">
+                        <MagnifyingGlassIcon className="h-5 w-5" />
+                    </button>
+                    <Link href="/write" className="text-sm font-medium hover:underline underline-offset-4 hidden sm:block">
+                        Write
+                    </Link>
                     <UserButton />
                 </div>
             </Container>

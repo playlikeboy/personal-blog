@@ -7,6 +7,7 @@ import { Title } from "rizzui";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { Post } from "@/lib/posts";
+import ReactMarkdown from "react-markdown";
 
 interface PostViewProps {
     post: Post | null;
@@ -42,12 +43,7 @@ export function PostView({ post }: PostViewProps) {
                     </div>
 
                     <div className="prose prose-lg prose-gray mx-auto prose-headings:font-bold prose-headings:tracking-tight prose-a:text-foreground prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-img:grayscale hover:prose-img:grayscale-0 transition-all">
-                        {/* 
-                           SAFEGUARD: If content is standard string (HTML or Markdown), render simply. 
-                           For proper Markdown, we'd use 'react-markdown' or similar here.
-                           Assuming simple text or HTML for now as per previous implementation structure.
-                        */}
-                        <div dangerouslySetInnerHTML={{ __html: post.content || "" }} />
+                        <ReactMarkdown>{post.content || ""}</ReactMarkdown>
                     </div>
                 </Container>
             </article>
