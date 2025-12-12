@@ -1,7 +1,7 @@
 "use client";
 
 import { Container } from "@/components/ui/container";
-import { PlateEditor } from "@/components/editor/plate-editor";
+import { PlateEditor, defaultValue } from "@/components/editor/plate-editor";
 import { Button } from "rizzui";
 import { useState } from "react";
 import type { Value } from 'platejs';
@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export default function WritePage() {
     const router = useRouter();
     const [title, setTitle] = useState("");
-    const [content, setContent] = useState<Value | undefined>(undefined);
+    const [content, setContent] = useState<Value>(defaultValue);
     const [isSaving, setIsSaving] = useState(false);
 
     const handleSave = async () => {

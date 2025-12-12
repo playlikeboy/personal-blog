@@ -10,7 +10,7 @@ import { Editor, EditorContainer } from '@/components/ui/editor';
 export function PlateEditor({ initialValue, onChange }: { initialValue?: Value; onChange?: (value: Value) => void }) {
   const editor = usePlateEditor({
     plugins: BasicNodesKit,
-    value: initialValue || value,
+    value: initialValue || defaultValue,
   });
 
   return (
@@ -22,7 +22,7 @@ export function PlateEditor({ initialValue, onChange }: { initialValue?: Value; 
   );
 }
 
-const value = normalizeNodeId([
+export const defaultValue: Value = normalizeNodeId([
   {
     children: [{ text: 'Basic Editor' }],
     type: 'h1',
