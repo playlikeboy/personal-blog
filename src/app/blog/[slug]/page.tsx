@@ -30,12 +30,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <Header />
             <main className="py-12 md:py-20">
                 <Container as="article" className="max-w-3xl">
-                    {/* Back Link */}
-                    <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black mb-8 transition-colors">
-                        <ArrowLeftIcon className="w-4 h-4" />
-                        Back to Home
-                    </Link>
-
+                    
                     {/* Header */}
                     <header className="mb-10 space-y-6">
                         <div className="flex gap-2 mb-4">

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { User } from "@stackframe/stack";
 import { Post } from "@/lib/posts";
+import NextImage from "next/image";
 
 interface HomeViewProps {
     user: User | null;
@@ -66,11 +67,15 @@ export function HomeView({ user, posts, featuredPost, recentPosts }: HomeViewPro
                             <Link href={`/posts/${featuredPost.slug}`} className="group grid md:grid-cols-12 gap-8 items-start">
                                 <div className="md:col-span-8 aspect-video w-full overflow-hidden bg-muted relative">
                                     {featuredPost.coverImage && (
-                                        <img
-                                            src={featuredPost.coverImage}
-                                            alt={featuredPost.title}
-                                            className="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
-                                        />
+                                        <div className="relative aspect-video w-full overflow-hidden rounded-xl">
+                                            <NextImage
+                                                src={featuredPost.coverImage}
+                                                alt={featuredPost.title}
+                                                fill
+                                                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                                priority
+                                            />
+                                        </div>
                                     )}
                                 </div>
                                 <div className="md:col-span-4 space-y-6">
@@ -105,12 +110,13 @@ export function HomeView({ user, posts, featuredPost, recentPosts }: HomeViewPro
                         <div className="grid md:grid-cols-3 gap-x-8 gap-y-16">
                             {recentPosts.map((post) => (
                                 <Link key={post.slug} href={`/posts/${post.slug}`} className="group space-y-4 block">
-                                    <div className="aspect-[3/2] w-full overflow-hidden bg-muted">
+                                    <div className="aspect-[3/2] w-full overflow-hidden bg-muted relative">
                                         {post.coverImage && (
-                                            <img
+                                            <NextImage
                                                 src={post.coverImage}
                                                 alt={post.title}
-                                                className="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
+                                                fill
+                                                className="object-cover transition-transform duration-300 group-hover:scale-105"
                                             />
                                         )}
                                     </div>

@@ -23,11 +23,7 @@ export function PostView({ post }: PostViewProps) {
             <Header />
             <article className="flex-1 py-20">
                 <Container className="max-w-3xl">
-                    <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground mb-12 transition-colors">
-                        <ArrowLeftIcon className="mr-2 h-4 w-4" />
-                        Back to Home
-                    </Link>
-
+                  
                     <div className="space-y-6 mb-16 text-center">
                         <div className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
                             {post.tags?.[0] || "Article"}

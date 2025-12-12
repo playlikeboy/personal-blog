@@ -1,8 +1,8 @@
-import { getAllPosts } from "@/lib/posts";
+import { getAllPosts, Post } from "@/lib/posts";
 import { FeedView } from "@/components/blog/feed-view";
 
 // Expanded hardcoded data for a better visual feed
-const DEMO_POSTS = [
+const DEMO_POSTS: unknown[] = [
     {
         slug: "minimalism-in-design",
         title: "The Art of Minimalism in Modern Web Design",
@@ -69,7 +69,7 @@ export default async function FeedPage() {
     let posts = await getAllPosts();
 
     // Always combine with demo posts for now to ensure a rich feed for the user
-    posts = [...posts, ...(DEMO_POSTS as any)];
+    posts = [...posts, ...(DEMO_POSTS as unknown as Post[])];
 
     return <FeedView posts={posts} />;
 }

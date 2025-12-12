@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Title, Text, Button } from "rizzui";
 import Link from "next/link";
+import NextImage from "next/image";
 import {
     UserCircleIcon,
     DocumentTextIcon,
@@ -28,7 +29,7 @@ export function DashboardView({ user }: DashboardViewProps) {
                     <div className="mb-16 border-b border-border pb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
                             <Title as="h1" className="text-4xl font-bold tracking-tight mb-2">Dashboard</Title>
-                            <Text className="text-muted-foreground">Manage your account and stories.</Text>
+                            <Text className="text-muted-foreground">You haven&apos;t published any stories yet.</Text>
                         </div>
                         <Button
                             variant="outline"
@@ -45,13 +46,18 @@ export function DashboardView({ user }: DashboardViewProps) {
                         <div className="md:col-span-4 space-y-8">
                             <div className="p-6 border border-border bg-muted/30">
                                 <div className="flex items-center gap-4 mb-6">
-                                    {user.profileImageUrl ? (
-                                        <img src={user.profileImageUrl} alt="Profile" className="w-12 h-12 rounded-full grayscale" />
-                                    ) : (
-                                        <div className="w-12 h-12 rounded-full bg-muted border border-border flex items-center justify-center">
-                                            <UserCircleIcon className="w-6 h-6 text-muted-foreground" />
-                                        </div>
-                                    )}
+                                    <div className="h-10 w-10 relative overflow-hidden rounded-full bg-muted">
+                                        {user.profileImageUrl ? (
+                                            <NextImage
+                                                src={user.profileImageUrl}
+                                                alt={user.displayName || "User"}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        ) : (
+                                            <UserCircleIcon className="h-full w-full text-muted-foreground p-2" />
+                                        )}
+                                    </div>
                                     <div className="overflow-hidden">
                                         <div className="font-semibold truncate">{user.displayName || "User"}</div>
                                         <div className="text-xs text-muted-foreground truncate">{user.primaryEmail}</div>
@@ -81,7 +87,7 @@ export function DashboardView({ user }: DashboardViewProps) {
                                     <span>Recent Activity</span>
                                 </Title>
                                 <div className="border border-border p-8 text-center text-muted-foreground">
-                                    <p>You haven't written any stories yet.</p>
+                                    <p>You haven&apos;t written any stories yet.</p>
                                     <Link href="/write" className="md:hidden mt-4 inline-block text-foreground underline underline-offset-4 text-sm">
                                         Write your first story
                                     </Link>

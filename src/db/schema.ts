@@ -72,7 +72,7 @@ export const posts = sqliteTable("posts", {
     // SEO Fields
     metaTitle: text("meta_title"),
     metaDescription: text("meta_description"),
-    
+
     createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(strftime('%s', 'now'))`),
     updatedAt: integer("updated_at", { mode: "timestamp" }).default(sql`(strftime('%s', 'now'))`),
 }, (table) => ({
@@ -145,7 +145,7 @@ export const comments = sqliteTable("comments", {
     postIdx: index("post_idx").on(table.postId),
 }));
 
-export const commentsRelations = relations(comments, ({ one, many }) => ({
+export const commentsRelations = relations(comments, ({ one }) => ({
     post: one(posts, {
         fields: [comments.postId],
         references: [posts.id],
