@@ -1,30 +1,39 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { Container } from "@/components/ui/container";
-import { Search } from "@/components/blog/search";
 import { getAllPosts } from "@/lib/posts";
+import { stackServerApp } from "@/stack/server";
+import { syncUserWithStack } from "@/lib/auth-sync";
+import { HomeView } from "@/components/home/home-view";
 
 export default async function Home() {
-	const posts = await getAllPosts();
+    // 1. Auth & Sync
+    const user = await stackServerApp.getUser();
+    if (user) {
+        await syncUserWithStack(user);
+    }
 
-	return (
-		<div className="flex min-h-screen flex-col bg-background font-sans">
-			<Header />
-			<main className="flex-1 py-12 md:py-20">
-				<Container>
-					<div className="mb-12 text-center md:text-left">
-						<h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-4 text-foreground">
-							Thoughts, stories, <br className="hidden md:block" /> and ideas.
-						</h1>
-						<p className="text-lg text-gray-500 max-w-2xl">
-							A minimalist space for sharing knowledge and perspectives without the noise.
-						</p>
-					</div>
+    // 2. Data Fetching
+    const posts = await getAllPosts();
 
-					<Search posts={posts} />
-				</Container>
-			</main>
-			<Footer />
-		</div>
-	);
+    // 3. Prepare data for client component
+    // We pass posts directly as they match the interface (mostly), or we cast them if needed.
+    // The previous manual mapping was good for sanitization but led to type mismatch if not careful.
+    // Let's rely on the real standard Post type.
+
+    const featuredPost = posts[0];
+    const recentPosts = posts.slice(1, 4);
+
+    return (
+        <div className="flex min-h-screen flex-col bg-background">
+            <Header />
+            <HomeView
+                user={user}
+                posts={posts}
+                featuredPost={featuredPost}
+                recentPosts={recentPosts}
+            />
+            <Footer />
+        </div>
+    );
 }
+
