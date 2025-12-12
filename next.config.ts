@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
 		domains: ["images.unsplash.com","randomuser.me"],
 	},
 	outputFileTracingIncludes: {
-		"/*": ["./node_modules/@libsql/**/*"],
-		"/api/*": ["./node_modules/@libsql/**/*"],
+		"/*": ["./node_modules/@libsql/**/*", "./content/**/*"],
+		"/api/*": ["./node_modules/@libsql/**/*", "./content/**/*"],
 	},
 	/* config options here */
 };
