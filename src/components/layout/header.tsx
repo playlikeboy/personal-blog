@@ -7,6 +7,8 @@ import { Button } from "rizzui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
 
+import { UserButton } from "@stackframe/stack";
+
 export function Header() {
     const pathname = usePathname();
 
@@ -27,6 +29,24 @@ export function Header() {
                         Home
                     </Link>
                     <Link
+                        href="/feed"
+                        className={cn(
+                            "text-sm font-medium transition-colors hover:text-foreground",
+                            pathname === "/feed" ? "text-foreground" : "text-gray-500"
+                        )}
+                    >
+                        Feed
+                    </Link>
+                    <Link
+                        href="/authors"
+                        className={cn(
+                            "text-sm font-medium transition-colors hover:text-foreground",
+                            pathname === "/authors" ? "text-foreground" : "text-gray-500"
+                        )}
+                    >
+                        Authors
+                    </Link>
+                    <Link
                         href="/about"
                         className={cn(
                             "text-sm font-medium transition-colors hover:text-foreground",
@@ -35,25 +55,19 @@ export function Header() {
                     >
                         About
                     </Link>
-                    <Link
-                        href="/write"
-                        className={cn(
-                            "text-sm font-medium transition-colors hover:text-foreground",
-                            pathname === "/write" ? "text-foreground" : "text-gray-500"
-                        )}
-                    >
-                        Write
-                    </Link>
                 </nav>
-                <div className="flex items-center gap-2">
-                    <button aria-label="Search" className="rounded-full p-2 hover:bg-gray-100 transition-colors">
-                        <MagnifyingGlassIcon className="h-5 w-5" />
-                    </button>
-                    <Link href="/write">
-                        <Button size="sm" className="hidden sm:inline-flex rounded-full">
-                            Write a Post
-                        </Button>
-                    </Link>
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <button aria-label="Search" className="rounded-full p-2 hover:bg-gray-100 transition-colors">
+                            <MagnifyingGlassIcon className="h-5 w-5" />
+                        </button>
+                        <Link href="/write">
+                            <Button size="sm" className="hidden sm:inline-flex rounded-full">
+                                Write
+                            </Button>
+                        </Link>
+                    </div>
+                    <UserButton />
                 </div>
             </Container>
         </header>
