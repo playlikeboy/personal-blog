@@ -1,9 +1,9 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Container } from "@/components/ui/container";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { getAllPosts } from "@/lib/posts";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default async function AuthorsPage() {
     const posts = await getAllPosts();
@@ -26,30 +26,39 @@ export default async function AuthorsPage() {
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans">
             <Header />
-            <main className="flex-1 py-12 md:py-20">
+            <main className="flex-1 py-12 md:py-20 lg:py-24">
                 <Container>
-                    <div className="mb-12 border-b border-gray-100 pb-8">
-                        <h1 className="text-3xl font-bold tracking-tight mb-2">Authors</h1>
-                        <p className="text-gray-500">Meet the voices behind the stories.</p>
+                    <div className="max-w-2xl">
+                        <h1 className="text-4xl font-bold tracking-tight mb-4">Authors</h1>
+                        <p className="text-xl text-muted-foreground mb-16">Meet the voices behind the stories.</p>
                     </div>
 
-                    <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
                         {authors.map((author) => (
                             <Link
                                 key={author.name}
                                 href={`/u/${author.name.toLowerCase().replace(/\s+/g, '-')}`}
-                                className="group flex flex-col items-center text-center p-6 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors"
+                                className="group flex flex-col items-center text-center space-y-4"
                             >
-                                <div className="relative w-20 h-20 rounded-full overflow-hidden bg-white mb-4 ring-2 ring-white shadow-sm group-hover:scale-105 transition-transform duration-300">
-                                    <Image
+                                <Avatar className="w-24 h-24 sm:w-32 sm:h-32 group-hover:scale-105 transition-transform duration-300 ring-offset-2 ring-1 ring-transparent group-hover:ring-gray-200">
+                                    <AvatarImage
                                         src={author.avatar}
                                         alt={author.name}
-                                        fill
                                         className="object-cover"
                                     />
+                                    <AvatarFallback className="text-2xl sm:text-4xl bg-gray-100">
+                                        {author.name.charAt(0)}
+                                    </AvatarFallback>
+                                </Avatar>
+                                
+                                <div className="space-y-1">
+                                    <h3 className="text-lg font-medium text-foreground group-hover:text-primary transition-colors">
+                                        {author.name}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground uppercase tracking-wide text-xs">
+                                        {author.postCount} {author.postCount === 1 ? 'Article' : 'Articles'}
+                                    </p>
                                 </div>
-                                <h3 className="text-lg font-bold text-foreground mb-1">{author.name}</h3>
-                                <p className="text-sm text-gray-500">{author.postCount} {author.postCount === 1 ? 'story' : 'stories'}</p>
                             </Link>
                         ))}
                     </div>
