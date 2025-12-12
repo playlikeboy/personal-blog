@@ -4,8 +4,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Container } from "@/components/ui/container";
 import { Title } from "rizzui";
-import Link from "next/link";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+// Link & ArrowLeftIcon removed (unused)
 import { Post } from "@/lib/posts";
 import ReactMarkdown from "react-markdown";
 

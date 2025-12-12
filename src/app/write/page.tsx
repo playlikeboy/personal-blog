@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container";
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { Button } from "rizzui";
 import { useState } from "react";
+import type { Value } from 'platejs';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { UserMenu } from "@/components/layout/user-menu";
@@ -14,7 +15,7 @@ export const dynamic = "force-dynamic";
 export default function WritePage() {
     const router = useRouter();
     const [title, setTitle] = useState("");
-    const [content, setContent] = useState<unknown>(null);
+    const [content, setContent] = useState<Value | undefined>(undefined);
     const [isSaving, setIsSaving] = useState(false);
 
     const handleSave = async () => {

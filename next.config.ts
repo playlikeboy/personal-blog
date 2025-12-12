@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
 	images: {
 		domains: ["images.unsplash.com","randomuser.me"],
 	},
+	outputFileTracingIncludes: {
+		"/*": ["./node_modules/@libsql/**/*"],
+		"/api/*": ["./node_modules/@libsql/**/*"],
+	},
 	/* config options here */
 };
 

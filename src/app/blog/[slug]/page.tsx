@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
+// Link removed (unused)
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Container } from "@/components/ui/container";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { getPostBySlug } from "@/lib/posts";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+// ArrowLeftIcon removed (unused)
 import { ScrollProgress } from "@/components/blog/scroll-progress";
 
 interface BlogPostPageProps {
