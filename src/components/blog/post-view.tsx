@@ -1,0 +1,57 @@
+"use client";
+
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { Container } from "@/components/ui/container";
+import { Title } from "rizzui";
+import Link from "next/link";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { Post } from "@/lib/posts";
+
+interface PostViewProps {
+    post: Post | null;
+}
+
+export function PostView({ post }: PostViewProps) {
+    if (!post) {
+        return null;
+    }
+
+    return (
+        <div className="flex min-h-screen flex-col bg-background font-sans text-foreground">
+            <Header />
+            <article className="flex-1 py-20">
+                <Container className="max-w-3xl">
+                    <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground mb-12 transition-colors">
+                        <ArrowLeftIcon className="mr-2 h-4 w-4" />
+                        Back to Home
+                    </Link>
+
+                    <div className="space-y-6 mb-16 text-center">
+                        <div className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
+                            {post.tags?.[0] || "Article"}
+                        </div>
+                        <Title as="h1" className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
+                            {post.title}
+                        </Title>
+                        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                            <span>{post.author?.name || "Author"}</span>
+                            <span>•</span>
+                            <span>{new Date(post.date).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+
+                    <div className="prose prose-lg prose-gray mx-auto prose-headings:font-bold prose-headings:tracking-tight prose-a:text-foreground prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-img:grayscale hover:prose-img:grayscale-0 transition-all">
+                        {/* 
+                           SAFEGUARD: If content is standard string (HTML or Markdown), render simply. 
+                           For proper Markdown, we'd use 'react-markdown' or similar here.
+                           Assuming simple text or HTML for now as per previous implementation structure.
+                        */}
+                        <div dangerouslySetInnerHTML={{ __html: post.content || "" }} />
+                    </div>
+                </Container>
+            </article>
+            <Footer />
+        </div>
+    );
+}

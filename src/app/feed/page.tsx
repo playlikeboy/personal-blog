@@ -1,30 +1,47 @@
-import { Container } from "@/components/ui/container";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { PostCard } from "@/components/blog/post-card";
 import { getAllPosts } from "@/lib/posts";
+import { FeedView } from "@/components/blog/feed-view";
+
+// Hardcoded data as requested by user
+const DEMO_POSTS = [
+    {
+        slug: "minimalism-in-design",
+        title: "The Art of Minimalism in Modern Web Design",
+        excerpt: "How less can truly be more when building digital products. A deep dive into negative space, typography, and functional purity.",
+        coverImage: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=2067&auto=format&fit=crop",
+        tags: ["Design"],
+        readTime: "5 min read",
+        date: "2024-04-12",
+        author: { name: "Alex Doe", avatar: "" }
+    },
+    {
+        slug: "future-of-ai",
+        title: "The Future of AI in Software Engineering",
+        excerpt: "Will AI replace engineers? No, but engineers who use AI will replace those who don't. Exploring the symbiotic relationship.",
+        coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2070&auto=format&fit=crop",
+        tags: ["Tech"],
+        readTime: "7 min read",
+        date: "2024-04-10",
+        author: { name: "Sarah Smith", avatar: "" }
+    },
+    {
+        slug: "database-scaling",
+        title: "Scaling Databases for Millions of Users",
+        excerpt: "Practical strategies for horizontal scaling, sharding, and caching. Lessons learned from high-traffic systems.",
+        coverImage: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?q=80&w=2121&auto=format&fit=crop",
+        tags: ["Engineering"],
+        readTime: "10 min read",
+        date: "2024-04-05",
+        author: { name: "Mike Chen", avatar: "" }
+    }
+];
 
 export default async function FeedPage() {
-    const posts = await getAllPosts();
+    let posts = await getAllPosts();
 
-    return (
-        <div className="flex min-h-screen flex-col bg-background font-sans">
-            <Header />
-            <main className="flex-1 py-12 md:py-20">
-                <Container>
-                    <div className="mb-12 border-b border-gray-100 pb-8">
-                        <h1 className="text-3xl font-bold tracking-tight mb-2">Your Feed</h1>
-                        <p className="text-gray-500">The latest stories from across the platform.</p>
-                    </div>
+    // If no posts found (file system issue), use hardcoded data
+    if (posts.length === 0) {
+        posts = DEMO_POSTS as any;
+    }
 
-                    <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-                        {posts.map((post) => (
-                            <PostCard key={post.slug} post={post} />
-                        ))}
-                    </div>
-                </Container>
-            </main>
-            <Footer />
-        </div>
-    );
+    return <FeedView posts={posts} />;
 }
