@@ -84,10 +84,9 @@ export default function WritePage() {
                         <input
                             type="text"
                             placeholder="Title..."
-                            className="w-full bg-transparent text-4xl md:text-5xl font-bold placeholder:text-gray-300 border-none focus:ring-0 p-0 tracking-tight"
+                            className="w-full border-0 bg-transparent text-4xl md:text-5xl font-bold placeholder:text-gray-300 border-none   p-0  "
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            autoFocus
                         />
                         <div className="min-h-[500px]">
                             <PlateEditor
