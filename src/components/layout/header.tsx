@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
-import { UserButton } from "@stackframe/stack";
+import { UserMenu } from "@/components/layout/user-menu";
 
 export function Header() {
     const pathname = usePathname();
@@ -18,7 +18,7 @@ export function Header() {
     ];
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl supports-backdrop-filter:bg-background/60">
             <Container className="flex h-16 items-center justify-between">
                 <Link href="/" className="font-bold tracking-tighter text-xl">
                     Minimal.
@@ -46,7 +46,7 @@ export function Header() {
                     <Link href="/write" className="text-sm font-medium hover:underline underline-offset-4 hidden sm:block">
                         Write
                     </Link>
-                    <UserButton />
+                    <UserMenu />
                 </div>
             </Container>
         </header>

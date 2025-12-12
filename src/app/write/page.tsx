@@ -1,12 +1,13 @@
 "use client";
 
 import { Container } from "@/components/ui/container";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { PlateEditor } from "@/components/editor/plate-editor";
-import { Button, Input } from "rizzui";
+import { Button } from "rizzui";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { UserMenu } from "@/components/layout/user-menu";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ export default function WritePage() {
     const [isSaving, setIsSaving] = useState(false);
 
     const handleSave = async () => {
-        if (!title || !content) return;
+        if (!title) return;
 
         setIsSaving(true);
         try {
@@ -45,43 +46,51 @@ export default function WritePage() {
 
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans">
-            <Header />
-            <main className="flex-1 py-12 md:py-20">
-                <Container className="max-w-4xl">
-                    <div className="mb-8 flex items-center justify-between">
-                        <div>
-                            <h1 className="text-3xl font-bold tracking-tight mb-2">Editor</h1>
-                            <p className="text-muted-foreground">Create your story using the block editor.</p>
-                        </div>
-                        <Button
-                            onClick={handleSave}
-                            isLoading={isSaving}
-                            disabled={!title || !content}
-                        >
-                            Publish Story
-                        </Button>
+            {/* Minimal Header */}
+            <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
+                <Container className="flex h-16 items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
+                            <ArrowLeftIcon className="h-5 w-5" />
+                        </Link>
+                        <span className="text-sm text-muted-foreground">Draft in <span className="text-foreground font-medium">Shaswat&apos;s Blog</span></span>
                     </div>
 
-                    <div className="space-y-6">
-                        <Input
-                            placeholder="Enter your title..."
-                            size="lg"
-                            variant="outline"
-                            className="[&_input]:text-4xl [&_input]:font-bold [&_input]:bg-transparent [&_input]:border-none [&_input]:p-0 [&_input]:placeholder:text-muted-foreground/50"
+                    <div className="flex items-center gap-4">
+                        <Button
+                            size="sm"
+                            className="rounded-full px-4"
+                            onClick={handleSave}
+                            isLoading={isSaving}
+                            disabled={!title}
+                        >
+                            Publish
+                        </Button>
+                        <UserMenu />
+                    </div>
+                </Container>
+            </header>
+
+            <main className="flex-1 py-10">
+                <Container className="max-w-3xl">
+                    <div className="space-y-4">
+                        <input
+                            type="text"
+                            placeholder="Title"
+                            className="w-full bg-transparent text-4xl md:text-5xl font-bold placeholder:text-muted-foreground/40 border-none focus:ring-0 p-0"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
+                            autoFocus
                         />
-                        <div className="border rounded-xl min-h-[500px] bg-background shadow-sm">
-                            {/* <PlateEditor 
+                        <div className="min-h-[500px]">
+                            <PlateEditor 
                                 initialValue={content}
                                 onChange={setContent}
-                            /> */}
-                            <div className="border p-4">Editor Temporarily Disabled for Debugging</div>
+                            />
                         </div>
                     </div>
                 </Container>
             </main>
-            <Footer />
         </div>
     );
 }

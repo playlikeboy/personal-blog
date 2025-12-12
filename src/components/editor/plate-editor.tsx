@@ -6,16 +6,16 @@ import { Plate, usePlateEditor } from 'platejs/react';
 import { BasicNodesKit } from '@/components/editor/plugins/basic-nodes-kit';
 import { Editor, EditorContainer } from '@/components/ui/editor';
 
-export function PlateEditor() {
+export function PlateEditor({ initialValue, onChange }: { initialValue?: any, onChange?: (value: any) => void }) {
   const editor = usePlateEditor({
     plugins: BasicNodesKit,
-    value,
+    value: initialValue || value,
   });
 
   return (
-    <Plate editor={editor}>
+    <Plate editor={editor} onValueChange={({ value }) => onChange?.(value)}>
       <EditorContainer>
-        <Editor variant="demo" placeholder="Type..." />
+        <Editor variant="none" placeholder="Tell your story..." className="min-h-[500px] text-lg focus:outline-none" />
       </EditorContainer>
     </Plate>
   );
