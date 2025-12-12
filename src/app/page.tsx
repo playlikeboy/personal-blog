@@ -27,7 +27,6 @@ export default async function Home() {
         <div className="flex min-h-screen flex-col bg-background">
             <Header />
             <HomeView
-                user={user}
                 posts={posts}
                 featuredPost={featuredPost}
                 recentPosts={recentPosts}

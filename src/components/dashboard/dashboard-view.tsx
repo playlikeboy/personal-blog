@@ -1,6 +1,6 @@
 "use client";
 
-import { useStackApp, User } from "@stackframe/stack";
+import { useStackApp, useUser } from "@stackframe/stack";
 import { Container } from "@/components/ui/container";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -14,12 +14,11 @@ import {
     ArrowRightOnRectangleIcon
 } from "@heroicons/react/24/outline";
 
-interface DashboardViewProps {
-    user: User;
-}
-
-export function DashboardView({ user }: DashboardViewProps) {
+export function DashboardView() {
+    const user = useUser();
     const app = useStackApp();
+
+    if (!user) return null;
 
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans text-foreground">

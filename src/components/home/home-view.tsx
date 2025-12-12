@@ -5,18 +5,19 @@ import { Search } from "@/components/blog/search";
 import { Button, Title, Text } from "rizzui";
 import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { User } from "@stackframe/stack";
+import { useUser } from "@stackframe/stack";
 import { Post } from "@/lib/posts";
 import NextImage from "next/image";
 
 interface HomeViewProps {
-    user: User | null;
     posts: Post[];
     featuredPost: Post | undefined;
     recentPosts: Post[];
 }
 
-export function HomeView({ user, posts, featuredPost, recentPosts }: HomeViewProps) {
+export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
+    const user = useUser();
+
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans antialiased text-foreground">
             <main className="flex-1">
@@ -117,6 +118,7 @@ export function HomeView({ user, posts, featuredPost, recentPosts }: HomeViewPro
                                                 alt={post.title}
                                                 fill
                                                 className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                                priority={false}
                                             />
                                         )}
                                     </div>

@@ -13,12 +13,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "rizzui";
 import Link from "next/link";
-import { 
-    UserIcon, 
-    PencilSquareIcon, 
-    RectangleGroupIcon, 
-    Cog6ToothIcon, 
-    ArrowRightOnRectangleIcon 
+import {
+    UserIcon,
+    PencilSquareIcon,
+    RectangleGroupIcon,
+    Cog6ToothIcon,
+    ArrowRightOnRectangleIcon,
+    HomeIcon,
+    NewspaperIcon,
+    UsersIcon
 } from "@heroicons/react/24/outline";
 
 export function UserMenu() {
@@ -54,7 +57,45 @@ export function UserMenu() {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+
+                {/* Navigation Group */}
                 <DropdownMenuGroup>
+                    <DropdownMenuLabel className="text-xs font-normal text-muted-foreground px-2 py-1.5">
+                        Navigation
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem asChild>
+                        <Link href="/" className="cursor-pointer w-full flex items-center">
+                            <HomeIcon className="mr-2 h-4 w-4" />
+                            <span>Home</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/feed" className="cursor-pointer w-full flex items-center">
+                            <NewspaperIcon className="mr-2 h-4 w-4" />
+                            <span>Feed</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/dashboard" className="cursor-pointer w-full flex items-center">
+                            <RectangleGroupIcon className="mr-2 h-4 w-4" />
+                            <span>Dashboard</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/authors" className="cursor-pointer w-full flex items-center">
+                            <UsersIcon className="mr-2 h-4 w-4" />
+                            <span>Authors</span>
+                        </Link>
+                    </DropdownMenuItem>
+                </DropdownMenuGroup>
+
+                <DropdownMenuSeparator />
+
+                {/* User Group */}
+                <DropdownMenuGroup>
+                    <DropdownMenuLabel className="text-xs font-normal text-muted-foreground px-2 py-1.5">
+                        Account
+                    </DropdownMenuLabel>
                     <DropdownMenuItem asChild>
                         <Link href={`/u/${user.id}`} className="cursor-pointer w-full flex items-center">
                             <UserIcon className="mr-2 h-4 w-4" />
@@ -68,20 +109,16 @@ export function UserMenu() {
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href="/dashboard" className="cursor-pointer w-full flex items-center">
-                            <RectangleGroupIcon className="mr-2 h-4 w-4" />
-                            <span>Dashboard</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                         <Link href="/handler/account-settings" className="cursor-pointer w-full flex items-center">
                             <Cog6ToothIcon className="mr-2 h-4 w-4" />
                             <span>Settings</span>
                         </Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
+
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
+
+                <DropdownMenuItem
                     className="cursor-pointer text-red-600 focus:text-red-600"
                     onClick={() => user.signOut()}
                 >

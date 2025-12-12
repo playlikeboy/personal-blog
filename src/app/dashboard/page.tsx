@@ -9,5 +9,5 @@ export default async function DashboardPage() {
         redirect("/handler/sign-in");
     }
 
-    return <DashboardView user={user} />;
+    return <DashboardView />;
 }

@@ -23,8 +23,8 @@ export function FeedView({ posts }: FeedViewProps) {
                     </div>
 
                     <div className="grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-                        {posts.map((post) => (
-                            <PostCard key={post.slug} post={post} />
+                        {posts.map((post, index) => (
+                            <PostCard key={`${post.slug}-${index}`} post={post} />
                         ))}
                     </div>
                 </Container>

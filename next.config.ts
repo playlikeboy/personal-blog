@@ -2,7 +2,17 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	images: {
-		domains: ["images.unsplash.com","randomuser.me"],
+		domains: ["images.unsplash.com", "randomuser.me"],
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 'avatars.githubusercontent.com',
+			},
+			{
+				protocol: 'https',
+				hostname: 'lh3.googleusercontent.com',
+			}
+		],
 	},
 	outputFileTracingIncludes: {
 		"/*": ["./node_modules/@libsql/**/*", "./content/**/*"],
