@@ -13,8 +13,8 @@ export function Header() {
     const navItems = [
         { label: "Home", href: "/" },
         { label: "Feed", href: "/feed" },
+        { label: "Dashboard", href: "/dashboard" },
         { label: "Authors", href: "/authors" },
-        { label: "About", href: "/about" },
     ];
 
     return (
