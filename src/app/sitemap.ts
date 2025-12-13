@@ -5,20 +5,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = "https://unstory.live";
 
     // Fetch all posts
-    const posts = await getAllPosts();
+    let posts: any[] = [];
+    try {
+        posts = await getAllPosts();
+    } catch (e) {
+        console.warn("Sitemap: Failed to fetch posts (build time?)", e);
+    }
 
     // Static Routes
-    const routes = [
-        "",
-        "/search",
-        "/feed",
-        "/about",
-        "/write",
-    ].map((route) => ({
+    const staticRoutes = [
+        '',
+        '/feed',
+        '/about',
+        '/write',
+        '/tags',
+        '/search',
+    ].map(route => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: route === "" ? 1 : 0.8,
+        changeFrequency: 'daily' as const,
+        priority: route === '' ? 1 : 0.8,
     }));
 
     // Post Routes
@@ -29,5 +35,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
     }));
 
-    return [...routes, ...postRoutes];
+    return [...staticRoutes, ...postRoutes];
 }

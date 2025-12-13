@@ -1,40 +1,63 @@
-import { stackServerApp } from "@/stack/server";
+'use client';
+
 import { DashboardView } from "@/components/dashboard/dashboard-view";
-import { redirect } from "next/navigation";
-import { db } from "@/db";
-import { posts, likes, comments } from "@/db/schema";
-import { eq, desc, sql } from "drizzle-orm";
+import { Loader, Text } from "rizzui";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 
-export const dynamic = 'force-dynamic';
+export default function DashboardPage() {
+    const router = useRouter();
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-export default async function DashboardPage() {
-    const user = await stackServerApp.getUser();
+    useEffect(() => {
+        fetch('/api/dashboard')
+            .then(res => {
+                if (res.status === 401) {
+                    router.push('/handler/sign-in');
+                    throw new Error("Unauthorized");
+                }
+                if (!res.ok) throw new Error("Failed to load");
+                return res.json();
+            })
+            .then(data => {
+                setData(data);
+                setLoading(false);
+            })
+            .catch(e => {
+                if (e.message !== "Unauthorized") {
+                    setError(e.message);
+                }
+                setLoading(false);
+            });
+    }, [router]);
 
-    if (!user) {
-        redirect("/handler/sign-in");
+    if (loading) {
+        return (
+            <div className="flex min-h-screen flex-col bg-background font-sans">
+                <Header />
+                <main className="flex-1 flex items-center justify-center">
+                    <Loader variant="spinner" size="lg" />
+                </main>
+            </div>
+        );
     }
 
-    // Fetch User's Stories
-    const userPosts = await db.query.posts.findMany({
-        where: eq(posts.authorId, user.id),
-        orderBy: [desc(posts.createdAt)],
-        with: {
-            tags: {
-                with: {
-                    tag: true
-                }
-            }
-        }
-    });
+    if (error) {
+        return (
+            <div className="flex min-h-screen flex-col bg-background font-sans">
+                <Header />
+                <main className="flex-1 flex items-center justify-center text-red-500">
+                    <Text>{error}</Text>
+                </main>
+            </div>
+        );
+    }
 
-    // Calculate Stats
-    const stats = {
-        stories: userPosts.length,
-        views: userPosts.reduce((acc, post) => acc + (post.views || 0), 0),
-        likes: userPosts.reduce((acc, post) => acc + (post.likesCount || 0), 0),
-        // Simplification: Not querying comments count aggregate yet to save time, using sum if available or 0
-        comments: userPosts.reduce((acc, post) => acc + (post.commentsCount || 0), 0),
-    };
+    if (!data) return null;
 
-    return <DashboardView user={user} posts={userPosts as any[]} stats={stats} />;
+    return <DashboardView user={data.user} posts={data.posts} stats={data.stats} />;
 }
