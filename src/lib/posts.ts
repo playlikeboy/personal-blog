@@ -1,8 +1,9 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
+import { db } from "@/db";
+import { posts } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
 
 export interface Post {
+    id: string;
     slug: string;
     title: string;
     excerpt: string;
@@ -12,35 +13,65 @@ export interface Post {
         name: string;
         avatar: string;
     };
+    authorId: string; // Expose Author ID for filtering
     readTime: string;
     tags: string[];
-    content?: string; // Markdown content
+    content?: string;
+    views: number;
+    likesCount: number;
 }
 
-const POSTS_DIR = path.join(process.cwd(), "content/posts");
-
 export async function getAllPosts(): Promise<Post[]> {
-    if (!fs.existsSync(POSTS_DIR)) {
-        return [];
-    }
-
-    const files = fs.readdirSync(POSTS_DIR).filter((file) => file.endsWith(".md"));
-
-    const posts = files.map((file) => {
-        const filePath = path.join(POSTS_DIR, file);
-        const fileContent = fs.readFileSync(filePath, "utf-8");
-        const { data, content } = matter(fileContent);
-
-        return {
-            ...data,
-            content,
-        } as Post;
+    const dbPosts = await db.query.posts.findMany({
+        with: {
+            author: true,
+            tags: {
+                with: {
+                    tag: true,
+                }
+            }
+        },
+        orderBy: [desc(posts.createdAt)],
     });
 
-    return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    return dbPosts.map(mapDbPostToPost);
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
-    const posts = await getAllPosts();
-    return posts.find((post) => post.slug === slug);
+    const dbPost = await db.query.posts.findFirst({
+        where: eq(posts.slug, slug),
+        with: {
+            author: true,
+            tags: {
+                with: {
+                    tag: true,
+                }
+            }
+        },
+    });
+
+    if (!dbPost) return undefined;
+
+    return mapDbPostToPost(dbPost);
+}
+
+function mapDbPostToPost(dbPost: any): Post {
+    return {
+        id: dbPost.id,
+        slug: dbPost.slug,
+        title: dbPost.title,
+        excerpt: dbPost.excerpt || "",
+        coverImage: dbPost.coverImage || "",
+        date: dbPost.createdAt ? new Date(dbPost.createdAt).toISOString() : new Date().toISOString(),
+        author: {
+            name: dbPost.author?.name || "Unknown",
+            avatar: dbPost.author?.avatar || "",
+        },
+        authorId: dbPost.authorId,
+        readTime: dbPost.readTime || "5 min read",
+        tags: dbPost.tags?.map((t: any) => t.tag.name) || [],
+        content: dbPost.content || "",
+        views: dbPost.views || 0,
+        likesCount: dbPost.likesCount || 0,
+    };
 }
