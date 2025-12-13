@@ -1,6 +1,7 @@
 "use client";
 
 import { useUser } from "@stackframe/stack";
+import { User } from "@/db/types";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -29,7 +30,7 @@ export function UserMenu() {
             fetch('/api/me')
                 .then(res => res.json())
                 .then(data => {
-                    const u = data as any;
+                    const u = data as User;
                     if (u.username) setUsername(u.username);
                 })
                 .catch(err => console.error("Failed to fetch username", err));

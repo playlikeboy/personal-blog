@@ -6,13 +6,14 @@ import { Footer } from "@/components/layout/footer";
 import { PostCard } from "@/components/blog/post-card";
 import { Title, Text, Loader } from "rizzui";
 import Image from "next/image";
+import { User, Post } from "@/db/types";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function UserPage() {
     const params = useParams();
     const username = params?.username as string;
-    const [data, setData] = useState<{ user: any; posts: any[] } | null>(null);
+    const [data, setData] = useState<{ user: User; posts: Post[] } | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -24,7 +25,7 @@ export default function UserPage() {
                 return res.json(); // Explicitly cast if needed, but 'any' state handles it for now
             })
             .then(data => {
-                setData(data as any);
+                setData(data as { user: User; posts: Post[] });
                 setLoading(false);
             })
             .catch(() => {
