@@ -207,3 +207,30 @@ export const newsletterSubscribers = sqliteTable("newsletter_subscribers", {
     isActive: integer("is_active", { mode: "boolean" }).default(true),
     createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(strftime('%s', 'now'))`),
 });
+
+// ----------------------------------------------------------------------
+// Analytics
+// ----------------------------------------------------------------------
+
+export const postViews = sqliteTable("post_views", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    postId: text("post_id").notNull().references(() => posts.id, { onDelete: 'cascade' }),
+    userId: text("user_id"), // Nullable for anonymous users
+    fingerprint: text("fingerprint"), // For anonymous tracking (IP/Cookie)
+    createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(strftime('%s', 'now'))`),
+}, (table) => ({
+    postIdx: index("post_views_post_idx").on(table.postId),
+    userIdx: index("post_views_user_idx").on(table.userId),
+    fingerprintIdx: index("post_views_fingerprint_idx").on(table.fingerprint),
+}));
+
+export const postViewsRelations = relations(postViews, ({ one }) => ({
+    post: one(posts, {
+        fields: [postViews.postId],
+        references: [posts.id],
+    }),
+    user: one(users, {
+        fields: [postViews.userId],
+        references: [users.id],
+    }),
+}));

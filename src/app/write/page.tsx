@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { UserMenu } from "@/components/layout/user-menu";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { PublishModal, PublishData } from "@/components/editor/publish-modal";
 
 export const dynamic = "force-dynamic";
 
@@ -17,10 +18,9 @@ export default function WritePage() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState<Value>(defaultValue);
     const [isSaving, setIsSaving] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleSave = async () => {
-        if (!title) return;
-
+    const handlePublish = async (data: PublishData) => {
         setIsSaving(true);
         try {
             const res = await fetch("/api/posts", {
@@ -29,6 +29,7 @@ export default function WritePage() {
                 body: JSON.stringify({
                     title,
                     content,
+                    ...data // excerpt, tags, coverImage
                 }),
             });
 
@@ -62,12 +63,12 @@ export default function WritePage() {
 
                     <div className="flex items-center gap-3">
                         <p className="text-xs text-gray-400 hidden sm:block mr-2">
-                            {isSaving ? "Saving..." : "Saved"}
+                            {isSaving ? "Publishing..." : "Saved"}
                         </p>
                         <Button
                             size="sm"
                             className="rounded-full px-5 font-medium"
-                            onClick={handleSave}
+                            onClick={() => setIsModalOpen(true)}
                             isLoading={isSaving}
                             disabled={!title}
                         >
@@ -84,7 +85,7 @@ export default function WritePage() {
                         <input
                             type="text"
                             placeholder="Title..."
-                            className="w-full border-0 bg-transparent text-4xl md:text-5xl font-bold placeholder:text-gray-300 border-none   p-0  "
+                            className="w-full border-0 bg-transparent text-4xl md:text-5xl font-bold placeholder:text-gray-300 border-none p-0 outline-none focus:ring-0"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
@@ -97,6 +98,12 @@ export default function WritePage() {
                     </div>
                 </Container>
             </main>
+
+            <PublishModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={handlePublish}
+            />
         </div>
     );
 }
