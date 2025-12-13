@@ -10,9 +10,10 @@ const nextConfig: NextConfig = {
 		],
 	},
 	outputFileTracingIncludes: {
-		"/*": ["./node_modules/@libsql/**/*", "./content/**/*"],
-		"/api/*": ["./node_modules/@libsql/**/*", "./content/**/*"],
+		"/*": ["./content/**/*"],
+		"/api/*": ["./content/**/*"],
 	},
+	transpilePackages: ["@libsql/client", "drizzle-orm"],
 	/* config options here */
 };
 
