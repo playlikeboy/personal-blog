@@ -1,0 +1,96 @@
+{
+    "meta": {
+        "name": "Unstory Design System",
+        "version": "1.0.0",
+        "philosophy": "Calm Design",
+        "description": "A minimal, emotion-driven design system prioritizing flow-state writing and reader immersion."
+    },
+    "tokens": {
+        "colors": {
+            "palette": {
+                "charcoal": "#1A1A1A",
+                "softCream": "#F2EDE7",
+                "calmBlue": "#7BA4FF",
+                "white": "#FFFFFF",
+                "gray100": "#F3F4F6",
+                "gray500": "#6B7280"
+            },
+            "semantic": {
+                "primary": "charcoal (#1A1A1A)",
+                "secondary": "softCream (#F2EDE7)",
+                "accent": "calmBlue (#7BA4FF)",
+                "background": "white (#FFFFFF)",
+                "foreground": "charcoal (#1A1A1A)",
+                "muted": "gray100 (#F3F4F6)"
+            }
+        },
+        "typography": {
+            "families": {
+                "serif": "Playfair Display",
+                "sans": "Geist Sans",
+                "mono": "Geist Mono"
+            },
+            "usage": {
+                "headings": "serif (Playfair Display)",
+                "body": "sans (Geist Sans)",
+                "ui": "sans (Geist Sans)",
+                "code": "mono (Geist Mono)"
+            },
+            "scale": {
+                "display": "text-6xl md:text-8xl lg:text-9xl",
+                "h1": "text-4xl md:text-5xl",
+                "h2": "text-3xl",
+                "h3": "text-2xl",
+                "body": "text-base md:text-lg"
+            }
+        },
+        "spacing": {
+            "section_padding": "py-24 md:py-32",
+            "element_gap": "gap-6 md:gap-12",
+            "container_max": "max-w-4xl"
+        },
+        "radius": {
+            "buttons": "rounded-full",
+            "cards": "rounded-xl",
+            "featured_card": "rounded-[2rem]"
+        }
+    },
+    "components": {
+        "buttons": {
+            "primary": {
+                "bg": "bg-foreground",
+                "text": "text-background",
+                "radius": "rounded-full",
+                "hover": "hover:scale-105 shadow-xl"
+            },
+            "secondary": {
+                "bg": "bg-transparent",
+                "text": "text-muted-foreground",
+                "radius": "rounded-full",
+                "hover": "hover:text-foreground"
+            }
+        },
+        "cards": {
+            "featured": {
+                "aspect": "aspect-[16/10]",
+                "shadow": "shadow-2xl",
+                "animation": "group-hover:scale-105"
+            },
+            "standard": {
+                "aspect": "aspect-[3/4]",
+                "bg": "bg-gray-50 dark:bg-gray-900",
+                "animation": "grayscale group-hover:grayscale-0"
+            }
+        },
+        "hero": {
+            "style": "Centered, High-Impact Typography",
+            "animations": "fade-in-up sequence",
+            "decoration": "Subtle blurred gradient orbs"
+        }
+    },
+    "ui_library": {
+        "core": "RizzUI",
+        "icons": "HeroIcons (Outline)",
+        "font_loader": "next/font/google"
+    }
+}
