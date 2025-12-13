@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/container";
 import { UserMenu } from "@/components/layout/user-menu";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Button } from "rizzui";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export function Header() {
     return (
@@ -18,6 +18,10 @@ export function Header() {
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-3">
+                    <Link href="/search" aria-label="Search" className="text-muted-foreground hover:text-foreground transition-colors p-2">
+                        <MagnifyingGlassIcon className="h-5 w-5" />
+                    </Link>
+
                     <ThemeToggle />
 
                     <Link href="/write">

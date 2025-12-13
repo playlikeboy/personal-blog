@@ -19,6 +19,10 @@ export interface Post {
     content?: string;
     views: number;
     likesCount: number;
+    commentsCount: number;
+    published: boolean;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export async function getAllPosts(): Promise<Post[]> {
@@ -73,5 +77,9 @@ function mapDbPostToPost(dbPost: any): Post {
         content: dbPost.content || "",
         views: dbPost.views || 0,
         likesCount: dbPost.likesCount || 0,
+        commentsCount: dbPost.commentsCount || 0,
+        published: dbPost.published || false,
+        createdAt: dbPost.createdAt ? new Date(dbPost.createdAt).toISOString() : new Date().toISOString(),
+        updatedAt: dbPost.updatedAt ? new Date(dbPost.updatedAt).toISOString() : new Date().toISOString(),
     };
 }

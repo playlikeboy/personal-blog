@@ -11,7 +11,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const routes = [
         "",
         "/search",
-        // Add other static routes here like /about if they exist
+        "/feed",
+        "/about",
+        "/write",
     ].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),

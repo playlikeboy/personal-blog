@@ -8,6 +8,7 @@ import { text, integer, sqliteTable, index, primaryKey } from "drizzle-orm/sqlit
 export const users = sqliteTable("users", {
     id: text("id").primaryKey(), // Stack Auth ID
     email: text("email").unique().notNull(),
+    username: text("username").unique(),
     name: text("name"),
     avatar: text("avatar"),
     bio: text("bio"),

@@ -4,24 +4,18 @@ import { useUser } from "@stackframe/stack";
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "rizzui";
+import { Button, Text } from "rizzui";
 import Link from "next/link";
 import {
     UserIcon,
     PencilSquareIcon,
-    RectangleGroupIcon,
-    Cog6ToothIcon,
     ArrowRightOnRectangleIcon,
-    HomeIcon,
-    NewspaperIcon,
-    UsersIcon
+    Squares2X2Icon
 } from "@heroicons/react/24/outline";
 
 export function UserMenu() {
@@ -30,7 +24,7 @@ export function UserMenu() {
     if (!user) {
         return (
             <Link href="/handler/sign-in">
-                <Button size="sm" variant="outline" className="rounded-full">
+                <Button size="sm" variant="outline" className="rounded-full border-gray-200 dark:border-gray-700">
                     Sign In
                 </Button>
             </Link>
@@ -40,89 +34,47 @@ export function UserMenu() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="text" className="relative h-8 w-8 rounded-full p-0 overflow-hidden border border-border">
-                    <Avatar className="h-8 w-8">
+                <div className="cursor-pointer">
+                    <Avatar className="h-9 w-9 ring-2 ring-transparent hover:ring-gray-100 transition-all">
                         <AvatarImage src={user.profileImageUrl || ""} alt={user.displayName || "User"} />
                         <AvatarFallback>{user.displayName?.slice(0, 2).toUpperCase() || "U"}</AvatarFallback>
                     </Avatar>
-                </Button>
+                </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{user.displayName}</p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                            {user.primaryEmail}
-                        </p>
-                    </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+            <DropdownMenuContent className="w-56 p-2" align="end" forceMount>
+                <div className="px-2 py-2 mb-2 bg-secondary/30 rounded-lg">
+                    <Text className="font-medium text-sm truncate">{user.displayName}</Text>
+                    <Text className="text-xs text-muted-foreground truncate opacity-70">
+                        {user.primaryEmail}
+                    </Text>
+                </div>
 
-                {/* Navigation Group */}
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel className="text-xs font-normal text-muted-foreground px-2 py-1.5">
-                        Navigation
-                    </DropdownMenuLabel>
-                    <DropdownMenuItem asChild>
-                        <Link href="/" className="cursor-pointer w-full flex items-center">
-                            <HomeIcon className="mr-2 h-4 w-4" />
-                            <span>Home</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href="/feed" className="cursor-pointer w-full flex items-center">
-                            <NewspaperIcon className="mr-2 h-4 w-4" />
-                            <span>Feed</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href="/dashboard" className="cursor-pointer w-full flex items-center">
-                            <RectangleGroupIcon className="mr-2 h-4 w-4" />
-                            <span>Dashboard</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href="/authors" className="cursor-pointer w-full flex items-center">
-                            <UsersIcon className="mr-2 h-4 w-4" />
-                            <span>Authors</span>
-                        </Link>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer flex items-center gap-2 rounded-lg py-2">
+                        <Squares2X2Icon className="h-4 w-4" />
+                        <span>Dashboard</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href={`/u/${(user as any).username || user.id}`} className="cursor-pointer flex items-center gap-2 rounded-lg py-2">
+                        <UserIcon className="h-4 w-4" />
+                        <span>Profile</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href="/write" className="cursor-pointer flex items-center gap-2 rounded-lg py-2">
+                        <PencilSquareIcon className="h-4 w-4" />
+                        <span>Write Story</span>
+                    </Link>
+                </DropdownMenuItem>
 
-                <DropdownMenuSeparator />
-
-                {/* User Group */}
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel className="text-xs font-normal text-muted-foreground px-2 py-1.5">
-                        Account
-                    </DropdownMenuLabel>
-                    <DropdownMenuItem asChild>
-                        <Link href={`/u/${user.id}`} className="cursor-pointer w-full flex items-center">
-                            <UserIcon className="mr-2 h-4 w-4" />
-                            <span>Profile</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href="/write" className="cursor-pointer w-full flex items-center">
-                            <PencilSquareIcon className="mr-2 h-4 w-4" />
-                            <span>Write a Story</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href="/handler/account-settings" className="cursor-pointer w-full flex items-center">
-                            <Cog6ToothIcon className="mr-2 h-4 w-4" />
-                            <span>Settings</span>
-                        </Link>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="my-2" />
 
                 <DropdownMenuItem
-                    className="cursor-pointer text-red-600 focus:text-red-600"
+                    className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2 rounded-lg py-2"
                     onClick={() => user.signOut()}
                 >
-                    <ArrowRightOnRectangleIcon className="mr-2 h-4 w-4" />
+                    <ArrowRightOnRectangleIcon className="h-4 w-4" />
                     <span>Sign out</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>

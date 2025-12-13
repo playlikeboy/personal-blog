@@ -76,7 +76,7 @@ export function PostView({ post }: PostViewProps) {
 
         // Fetch Like Status/Count (fresh)
         fetch(`/api/posts/${post.slug}/like`)
-            .then(res => res.json())
+            .then(res => res.json() as Promise<{ likesCount?: number; isLiked?: boolean }>)
             .then(data => {
                 if (data.likesCount !== undefined) setLikes(data.likesCount);
                 if (data.isLiked !== undefined) setIsLiked(data.isLiked);
@@ -96,7 +96,7 @@ export function PostView({ post }: PostViewProps) {
         try {
             const res = await fetch(`/api/posts/${post.slug}/like`, { method: "POST" });
             if (!res.ok) throw new Error();
-            const data = await res.json();
+            const data = await res.json() as { liked?: boolean };
             if (data.liked !== undefined) setIsLiked(data.liked);
         } catch (e) {
             // Revert
