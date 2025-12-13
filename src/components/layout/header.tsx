@@ -1,52 +1,38 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { cn } from "@/lib/utils";
 import { UserMenu } from "@/components/layout/user-menu";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Button } from "rizzui";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 export function Header() {
-    const pathname = usePathname();
-
-    const navItems = [
-        { label: "Home", href: "/" },
-        { label: "Feed", href: "/feed" },
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Authors", href: "/authors" },
-    ];
-
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl supports-backdrop-filter:bg-background/60">
+        <header className="fixed top-0 z-50 w-full border-b border-gray-100/50 dark:border-gray-800/50 bg-background/80 backdrop-blur-xl supports-backdrop-filter:bg-background/60">
             <Container className="flex h-16 items-center justify-between">
-                <Link href="/" className="font-bold tracking-tighter text-xl">
-                    Minimal.
+                {/* Logo */}
+                <Link href="/" className="font-serif text-2xl font-semibold tracking-tight text-foreground hover:opacity-80 transition-opacity">
+                    Unstory.
                 </Link>
 
-                <nav className="hidden md:flex items-center gap-8">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                "text-sm font-medium transition-colors hover:text-foreground",
-                                pathname === item.href ? "text-foreground" : "text-muted-foreground"
-                            )}
-                        >
-                            {item.label}
-                        </Link>
-                    ))}
-                </nav>
+                {/* Right Actions */}
+                <div className="flex items-center gap-3">
+                    <ThemeToggle />
 
-                <div className="flex items-center gap-4">
-                    <button aria-label="Search" className="text-muted-foreground hover:text-foreground transition-colors">
-                        <MagnifyingGlassIcon className="h-5 w-5" />
-                    </button>
-                    <Link href="/write" className="text-sm font-medium hover:underline underline-offset-4 hidden sm:block">
-                        Write
+                    <Link href="/write">
+                        <Button
+                            variant="text"
+                            className="hidden sm:inline-flex gap-2 text-sm font-medium text-foreground hover:bg-secondary/50 rounded-full px-4"
+                        >
+                            <PencilSquareIcon className="w-4 h-4" />
+                            Write
+                        </Button>
                     </Link>
-                    <UserMenu />
+
+                    <div className="pl-2 border-l border-gray-200 dark:border-gray-800 ml-1">
+                        <UserMenu />
+                    </div>
                 </div>
             </Container>
         </header>
