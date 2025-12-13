@@ -10,81 +10,36 @@ module.exports = {
         extend: {
             colors: {
                 /*
-                 * body, modal, drawer background & ring-offset-color
+                 * Unstory Palette
                  */
                 background: "#ffffff",
+                foreground: "#1A1A1A", // Charcoal Black
 
-                /*
-                 * body text color
-                 */
-                foreground: colors.gray[600],
-
-                /*
-                 * border, default flat bg color for input components, tab & dropdown hover color
-                 */
-                muted: colors.gray[200],
-
-                /*
-                 * primary colors
-                 */
                 primary: {
-                    lighter: colors.gray[200],
-                    DEFAULT: colors.gray[800],
-                    dark: colors.gray[950],
-                    foreground: colors.white,
+                    DEFAULT: "#1A1A1A", // Charcoal Black
+                    foreground: "#ffffff",
                 },
 
-                /*
-                 * secondary colors
-                 */
                 secondary: {
-                    lighter: colors.indigo[200],
-                    DEFAULT: colors.indigo[500],
-                    dark: colors.indigo[700],
-                    foreground: colors.white,
+                    DEFAULT: "#F2EDE7", // Soft Cream
+                    foreground: "#1A1A1A",
                 },
 
-                /*
-                 * danger colors
-                 */
-                red: {
-                    lighter: colors.rose[200],
-                    DEFAULT: colors.rose[500],
-                    dark: colors.rose[700],
+                accent: {
+                    DEFAULT: "#7BA4FF", // Calm Blue
+                    foreground: "#ffffff",
                 },
 
-                /*
-                 * warning colors
-                 */
-                orange: {
-                    lighter: colors.amber[200],
-                    DEFAULT: colors.amber[500],
-                    dark: colors.amber[700],
-                },
-
-                /*
-                 * info colors
-                 */
-                blue: {
-                    lighter: colors.sky[200],
-                    DEFAULT: colors.sky[500],
-                    dark: colors.sky[700],
-                },
-
-                /*
-                 * success colors
-                 */
-                green: {
-                    lighter: colors.emerald[200],
-                    DEFAULT: colors.emerald[500],
-                    dark: colors.emerald[700],
-                },
+                muted: {
+                    DEFAULT: "#F3F4F6", // Gray-100 placeholder
+                    foreground: "#6B7280", // Gray-500 text
+                }
             },
-            fontFamily: {
-                sans: ["var(--font-geist-sans)"],
-                mono: ["var(--font-geist-mono)"],
-            }
         },
+        fontFamily: {
+            sans: ["var(--font-geist-sans)"],
+            mono: ["var(--font-geist-mono)"],
+        }
     },
     plugins: [
         require("@tailwindcss/forms"),

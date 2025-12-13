@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-    const baseUrl = "https://minimal.strivio.world";
+    const baseUrl = "https://unstory.live";
 
     return {
         rules: {

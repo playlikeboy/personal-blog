@@ -2,7 +2,7 @@ import { getAllPosts } from "@/lib/posts";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = "https://minimal.strivio.world";
+    const baseUrl = "https://unstory.live";
 
     // Fetch all posts
     const posts = await getAllPosts();

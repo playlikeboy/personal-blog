@@ -16,21 +16,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
 	title: {
-		default: "Minimal | Thoughts, stories, and ideas.",
-		template: "%s | Minimal",
+		default: "Unstory.live | Write your story. Share your voice.",
+		template: "%s | Unstory",
 	},
-	description: "A minimalist space for sharing knowledge and perspectives without the noise. Built for writers and readers.",
+	description: "A story-first, emotion-driven blogging platform. No distractions, just your words and the people who connect with them.",
 	openGraph: {
-		title: "Minimal | Thoughts, stories, and ideas.",
+		title: "Unstory.live | Write your story. Share your voice.",
 		description: "A minimalist space for sharing knowledge and perspectives without the noise.",
-		url: "https://minimal.strivio.world",
-		siteName: "Minimal",
+		url: "https://unstory.live",
+		siteName: "Unstory",
 		locale: "en_US",
 		type: "website",
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "Minimal | Thoughts, stories, and ideas.",
+		title: "Unstory.live | Write your story. Share your voice.",
 		description: "A minimalist space for sharing knowledge and perspectives without the noise.",
 	},
 	robots: {
@@ -49,11 +49,11 @@ export const metadata: Metadata = {
 const jsonLd = {
 	"@context": "https://schema.org",
 	"@type": "WebSite",
-	name: "Minimal",
-	url: "https://minimal.strivio.world",
+	name: "Unstory",
+	url: "https://unstory.live",
 	potentialAction: {
 		"@type": "SearchAction",
-		target: "https://minimal.strivio.world/search?q={search_term_string}",
+		target: "https://unstory.live/search?q={search_term_string}",
 		"query-input": "required name=search_term_string",
 	},
 };
