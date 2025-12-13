@@ -1,28 +1,31 @@
-import { MetadataRoute } from 'next';
-import { getAllPosts } from '@/lib/posts';
+import { getAllPosts } from "@/lib/posts";
+import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    const baseUrl = "https://minimal.strivio.world";
+
+    // Fetch all posts
     const posts = await getAllPosts();
-    const baseUrl = 'https://minimal.strivio.world';
 
-    const postsUrls = posts.map((post) => ({
-        url: `${baseUrl}/blog/${post.slug}`,
-        lastModified: new Date(post.date),
-        changeFrequency: 'weekly' as const,
-        priority: 0.7,
-    }));
-
-    const staticRoutes = [
-        '',
-        '/about',
-        '/authors',
-        '/feed',
+    // Static Routes
+    const routes = [
+        "",
+        "/search",
+        // Add other static routes here like /about if they exist
     ].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
-        changeFrequency: 'daily' as const,
-        priority: route === '' ? 1 : 0.8,
+        changeFrequency: "daily" as const,
+        priority: route === "" ? 1 : 0.8,
     }));
 
-    return [...staticRoutes, ...postsUrls];
+    // Post Routes
+    const postRoutes = posts.map((post) => ({
+        url: `${baseUrl}/posts/${post.slug}`,
+        lastModified: new Date(post.updatedAt || post.createdAt || Date.now()),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+    }));
+
+    return [...routes, ...postRoutes];
 }
