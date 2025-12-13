@@ -18,8 +18,23 @@ import {
     Squares2X2Icon
 } from "@heroicons/react/24/outline";
 
+import { useEffect, useState } from "react";
+
 export function UserMenu() {
     const user = useUser();
+    const [username, setUsername] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (user) {
+            fetch('/api/me')
+                .then(res => res.json())
+                .then(data => {
+                    const u = data as any;
+                    if (u.username) setUsername(u.username);
+                })
+                .catch(err => console.error("Failed to fetch username", err));
+        }
+    }, [user]);
 
     if (!user) {
         return (
@@ -56,7 +71,7 @@ export function UserMenu() {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                    <Link href={`/u/${(user as any).username || user.id}`} className="cursor-pointer flex items-center gap-2 rounded-lg py-2">
+                    <Link href={`/u/${username || (user as any).username || user.id}`} className="cursor-pointer flex items-center gap-2 rounded-lg py-2">
                         <UserIcon className="h-4 w-4" />
                         <span>Profile</span>
                     </Link>
