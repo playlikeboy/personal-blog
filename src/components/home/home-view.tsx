@@ -3,7 +3,7 @@
 import { Container } from "@/components/ui/container";
 import { Button, Title, Text, Grid } from "rizzui";
 import Link from "next/link";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { useUser } from "@stackframe/stack";
 import { Post } from "@/lib/posts";
 import NextImage from "next/image";
@@ -45,70 +45,87 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
                     <Container className="relative z-10 w-full">
                         <div className="grid lg:grid-cols-12 gap-12 lg:gap-24 items-center">
                             {/* Left Content */}
-                            <div className="lg:col-span-7 flex flex-col items-start text-left space-y-10">
+                            <div className="lg:col-span-12 xl:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-10 lg:pl-10">
                                 {/* Decorative Tag */}
                                 <div className="inline-flex items-center gap-2.5 px-3 py-1 border-l-2 border-accent/50 pl-3">
                                     <span className="text-sm font-medium tracking-widest uppercase text-muted-foreground/80">
-                                        Personal Blog & Portfolio
+                                        Unstory.live
                                     </span>
                                 </div>
 
                                 {/* Main Headline */}
                                 <div className="space-y-4">
-                                    <h1 className="text-7xl md:text-8xl lg:text-9xl font-serif font-medium tracking-tight text-primary leading-[0.85]">
-                                        Refining <br />
-                                        <span className="italic relative inline-block">
-                                            Reality
-                                            {/* Underline accent */}
-                                            <svg className="absolute w-full h-3 -bottom-1 left-0 text-accent/30 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
-                                                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
-                                            </svg>
-                                        </span>
+                                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-medium tracking-tight text-primary leading-[1]">
+                                        Your Story. Owned. <br />
+                                        <span className="italic relative inline-block text-gray-500 dark:text-gray-400">
+                                            Uncensored.
+                                        </span> <br />
+                                        Timeless.
                                     </h1>
                                 </div>
 
                                 {/* Subheading */}
-                                <p className="text-xl md:text-2xl text-muted-foreground max-w-xl font-light leading-relaxed">
-                                    A curated collection of thoughts on <span className="text-foreground font-medium decoration-accent/30 underline decoration-1 underline-offset-4">design</span>, <span className="text-foreground font-medium decoration-accent/30 underline decoration-1 underline-offset-4">technology</span>, and the <span className="text-foreground font-medium decoration-accent/30 underline decoration-1 underline-offset-4">future</span>.
-                                    Exploring the intersection of minimalism and complexity.
+                                <p className="text-xl md:text-2xl text-muted-foreground/90 max-w-2xl font-light leading-relaxed">
+                                    Unstory is a <span className="text-foreground font-medium">creator-first</span> publishing platform where ideas live beyond algorithms. Write freely, build an audience directly, and <span className="text-foreground font-medium decoration-accent/30 underline decoration-1 underline-offset-4">own every word</span> you publish.
                                 </p>
 
                                 {/* CTA Buttons */}
-                                <div className="flex flex-wrap items-center gap-6 pt-4">
-                                    <Link href={user ? "/write" : "/handler/sign-in"}>
+                                <div className="flex flex-col sm:flex-row items-center gap-6 pt-2 w-full sm:w-auto">
+                                    <Link href={user ? "/write" : "/handler/sign-in"} className="w-full sm:w-auto">
                                         <Button
                                             size="lg"
-                                            className="h-14 px-8 rounded-none border border-foreground bg-foreground text-background hover:bg-background hover:text-foreground transition-all duration-300 relative overflow-hidden group"
+                                            className="h-14 w-full sm:w-auto px-10 rounded-full border border-foreground bg-foreground text-background hover:bg-background hover:text-foreground transition-all duration-300 relative overflow-hidden group shadow-lg"
                                         >
-                                            <span className="relative z-10 font-medium tracking-wide">Start Reading</span>
+                                            <span className="relative z-10 font-medium tracking-wide text-lg">Start Writing — Free</span>
                                             <div className="absolute inset-0 bg-white dark:bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                                         </Button>
                                     </Link>
-                                    <Link href="/about" className="group flex items-center gap-2 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-3">
-                                        <span>Who am I?</span>
+                                    <Link href="/search" className="group flex items-center gap-2 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-3">
+                                        <span>Explore Stories</span>
                                         <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                                     </Link>
                                 </div>
+
+                                {/* Value Highlights */}
+                                <div className="pt-8 w-full">
+                                    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-3 text-sm font-medium text-muted-foreground/80">
+                                        <div className="flex items-center gap-2">
+                                            <CheckIcon className="w-4 h-4 text-accent" />
+                                            <span>Own your content & audience</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <CheckIcon className="w-4 h-4 text-accent" />
+                                            <span>Clean, distraction-free reading</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <CheckIcon className="w-4 h-4 text-accent" />
+                                            <span>Built for long-form thinkers</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <CheckIcon className="w-4 h-4 text-accent" />
+                                            <span>No algorithm. No shadow bans.</span>
+                                        </div>
+                                    </div>
+                                    <p className="mt-8 text-xs uppercase tracking-widest text-muted-foreground/60">
+                                        Built for writers, thinkers, and internet natives who care about signal over noise.
+                                    </p>
+                                </div>
                             </div>
 
-                            {/* Right Visual / Abstract */}
-                            <div className="lg:col-span-5 hidden lg:block relative">
-                                <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
-                                    {/* Decorative Frames */}
-                                    <div className="absolute top-4 right-4 w-full h-full border border-gray-200 dark:border-gray-800 rounded-lg z-0 opacity-60" />
-                                    <div className="absolute -top-4 -left-4 w-full h-full bg-secondary/50 rounded-lg z-0" />
+                            {/* Right Visual / Abstract - Hidden for now to focus on copy/typography as per request or kept minimal */}
+                            <div className="hidden xl:block lg:col-span-5 relative h-full min-h-[600px] flex items-center">
+                                <div className="relative w-full aspect-[4/5] max-w-md mx-auto">
+                                    {/* Decorative Frames for specific Unstory vibe */}
+                                    <div className="absolute top-8 right-8 w-full h-full border border-gray-200 dark:border-gray-800 rounded-none z-0 opacity-60" />
+                                    <div className="absolute -top-8 -left-8 w-full h-full bg-secondary/30 rounded-none z-0" />
 
-                                    {/* Main "Image" Area - Using a nice gradient/abstract placeholder for now if no image */}
-                                    <div className="absolute inset-0 bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-2xl z-10 flex items-center justify-center group">
-                                        {/* Abstract geometric shapes or placeholder */}
-                                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_50%_0%,rgba(0,0,0,0.1),transparent_50%)]" />
-                                        <div className="w-3/4 h-3/4 border border-dashed border-gray-300 dark:border-gray-700 rounded flex flex-col items-center justify-center text-center p-6 space-y-4">
-                                            <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center animate-pulse">
-                                                <svg className="w-8 h-8 text-accent opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                                                </svg>
-                                            </div>
-                                            <p className="text-xs text-muted-foreground uppercase tracking-widest">Minimalist Design</p>
+                                    <div className="absolute inset-0 bg-gray-50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center p-12 text-center shadow-2xl">
+                                        <div className="space-y-8 max-w-xs">
+                                            <div className="w-20 h-1 absolute top-12 left-1/2 -translate-x-1/2 bg-foreground/10" />
+                                            <p className="font-serif text-3xl leading-snug text-foreground/80 italic">
+                                                "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion."
+                                            </p>
+                                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">— Camus</p>
                                         </div>
                                     </div>
                                 </div>
