@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { posts } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, like, or, and, count } from "drizzle-orm";
 
 export interface Post {
     id: string;
@@ -58,6 +58,52 @@ export async function getPostBySlug(slug: string): Promise<Post | undefined> {
     if (!dbPost) return undefined;
 
     return mapDbPostToPost(dbPost);
+}
+
+export async function searchPosts(query: string, page: number = 1, limit: number = 12): Promise<{ posts: Post[], totalCount: number }> {
+    const offset = (page - 1) * limit;
+
+    // Base conditions
+    const searchFilter = query
+        ? or(
+            like(posts.title, `%${query}%`),
+            like(posts.excerpt, `%${query}%`),
+            // Note: Searching content/JSON might be noisy but we can Include it if needed
+            // like(posts.content, `%${query}%`)
+        )
+        : undefined;
+
+    const conditions = and(
+        eq(posts.published, true),
+        searchFilter
+    );
+
+    // Get Total Count
+    const [{ count: total }] = await db
+        .select({ count: count() })
+        .from(posts)
+        .where(conditions);
+
+    // Get Data
+    const dbPosts = await db.query.posts.findMany({
+        where: conditions,
+        orderBy: [desc(posts.createdAt)],
+        limit,
+        offset,
+        with: {
+            author: true,
+            tags: {
+                with: {
+                    tag: true
+                }
+            }
+        }
+    });
+
+    return {
+        posts: dbPosts.map(mapDbPostToPost),
+        totalCount: total
+    };
 }
 
 export function mapDbPostToPost(dbPost: any): Post {

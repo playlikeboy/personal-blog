@@ -1,16 +1,38 @@
 import { db } from "@/db";
 import { posts } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, count } from "drizzle-orm";
 import { mapDbPostToPost } from "@/lib/posts";
 import { FeedView } from "@/components/blog/feed-view";
 
 export const dynamic = 'force-dynamic';
 
-export default async function FeedPage() {
+interface FeedPageProps {
+    searchParams: Promise<{
+        page?: string;
+    }>;
+}
+
+export default async function FeedPage({ searchParams }: FeedPageProps) {
+    const { page = "1" } = await searchParams;
+    const pageNum = parseInt(page, 10);
+    const limit = 12; // Standardize limit
+    const offset = (pageNum - 1) * limit;
+
+    const conditions = eq(posts.published, true);
+
+    // Get Total Count
+    const [{ count: total }] = await db
+        .select({ count: count() })
+        .from(posts)
+        .where(conditions);
+
+    const totalPages = Math.ceil(total / limit);
+
     const dbPosts = await db.query.posts.findMany({
-        where: eq(posts.published, true),
+        where: conditions,
         orderBy: [desc(posts.createdAt)],
-        limit: 20,
+        limit,
+        offset,
         with: {
             author: true,
             tags: {
@@ -23,5 +45,5 @@ export default async function FeedPage() {
 
     const mappedPosts = dbPosts.map(mapDbPostToPost);
 
-    return <FeedView posts={mappedPosts} />;
+    return <FeedView posts={mappedPosts} currentPage={pageNum} totalPages={totalPages} />;
 }

@@ -8,11 +8,15 @@ import { Post } from "@/lib/posts";
 import Link from "next/link";
 import { PostCard } from "@/components/blog/post-card";
 
+import { PaginationControl } from "@/components/ui/pagination-control";
+
 interface FeedViewProps {
     posts: Post[];
+    currentPage: number;
+    totalPages: number;
 }
 
-export function FeedView({ posts }: FeedViewProps) {
+export function FeedView({ posts, currentPage, totalPages }: FeedViewProps) {
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans text-foreground">
             <Header />
@@ -63,6 +67,11 @@ export function FeedView({ posts }: FeedViewProps) {
                             <Link href="/write" className="underline ml-1">Write the first one.</Link>
                         </div>
                     )}
+
+                    <PaginationControl
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                    />
                 </Container>
             </main>
             <Footer />
