@@ -60,10 +60,10 @@ export function UserMenu() {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
             >
-                <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white/80 backdrop-blur-xl py-1 shadow-lg ring-1 ring-black/5 focus:outline-none border border-gray-100">
-                    <div className="px-4 py-3 border-b border-gray-100 mb-1">
-                        <p className="text-sm font-medium text-gray-900 truncate">{user.displayName}</p>
-                        <p className="text-xs text-gray-500 truncate">{user.primaryEmail}</p>
+                <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl py-1 shadow-lg ring-1 ring-black/5 focus:outline-none border border-gray-100 dark:border-gray-800">
+                    <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 mb-1">
+                        <p className="text-sm font-medium text-foreground truncate">{user.displayName}</p>
+                        <p className="text-xs text-muted-foreground truncate">{user.primaryEmail}</p>
                     </div>
 
                     <div className="p-1">
@@ -72,8 +72,8 @@ export function UserMenu() {
                                 <Link
                                     href="/dashboard"
                                     className={cn(
-                                        focus ? 'bg-gray-50' : '',
-                                        'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors'
+                                        focus ? 'bg-gray-50 dark:bg-gray-800' : '',
+                                        'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground transition-colors'
                                     )}
                                 >
                                     <Squares2X2Icon className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
@@ -86,8 +86,8 @@ export function UserMenu() {
                                 <Link
                                     href={`/@${username || (user as any).username || user.id}`}
                                     className={cn(
-                                        focus ? 'bg-gray-50' : '',
-                                        'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors'
+                                        focus ? 'bg-gray-50 dark:bg-gray-800' : '',
+                                        'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground transition-colors'
                                     )}
                                 >
                                     <UserIcon className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
@@ -100,8 +100,8 @@ export function UserMenu() {
                                 <Link
                                     href="/write"
                                     className={cn(
-                                        focus ? 'bg-gray-50' : '',
-                                        'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors'
+                                        focus ? 'bg-gray-50 dark:bg-gray-800' : '',
+                                        'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground transition-colors'
                                     )}
                                 >
                                     <PencilSquareIcon className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
@@ -111,13 +111,13 @@ export function UserMenu() {
                         </MenuItem>
                     </div>
 
-                    <div className="border-t border-gray-100 p-1 mt-1">
+                    <div className="border-t border-gray-100 dark:border-gray-800 p-1 mt-1">
                         <MenuItem>
                             {({ focus }) => (
                                 <button
                                     onClick={() => user.signOut()}
                                     className={cn(
-                                        focus ? 'bg-red-50 text-red-700' : 'text-red-600',
+                                        focus ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400' : 'text-red-600 dark:text-red-500',
                                         'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors'
                                     )}
                                 >

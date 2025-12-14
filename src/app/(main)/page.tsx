@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/lib/posts";
+import { getAllPosts, getMostLikedPost, getPostsByUsername, getRecentPosts } from "@/lib/posts";
 import { stackServerApp } from "@/stack/server";
 import { syncUserWithStack } from "@/lib/auth-sync";
 import { HomeView } from "@/components/home/home-view";
@@ -11,19 +11,13 @@ export default async function Home() {
     }
 
     // 2. Data Fetching
-    const posts = await getAllPosts();
-
-    // 3. Prepare data for client component
-    // We pass posts directly as they match the interface (mostly), or we cast them if needed.
-    // The previous manual mapping was good for sanitization but led to type mismatch if not careful.
-    // Let's rely on the real standard Post type.
-
-    const featuredPost = posts.find(p => p.featured) || posts[0];
-    const recentPosts = posts.filter(p => p.id !== featuredPost?.id).slice(0, 3);
+    const featuredPost = await getMostLikedPost();
+    const topAuthorPosts = await getPostsByUsername('sh20raj', 3);
+    const recentPosts = await getRecentPosts(6, featuredPost?.id);
 
     return (
         <HomeView
-            posts={posts}
+            topAuthorPosts={topAuthorPosts}
             featuredPost={featuredPost}
             recentPosts={recentPosts}
         />

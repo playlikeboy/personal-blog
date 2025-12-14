@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { type Post } from "@/lib/posts";
 import { Title, Text } from "rizzui";
 
+import { formatDate } from "@/lib/utils";
+
 interface PostCardProps {
     post: Post;
 }
@@ -46,7 +48,7 @@ export function PostCard({ post }: PostCardProps) {
                     {post.excerpt}
                 </Text>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground pt-1 font-medium">
-                    <span>{post.date}</span>
+                    <span>{formatDate(post.date)}</span>
                     <span>•</span>
                     <span>{post.readTime}</span>
                 </div>

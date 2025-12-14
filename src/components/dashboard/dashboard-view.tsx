@@ -11,8 +11,12 @@ import {
     HeartIcon,
     ChatBubbleLeftIcon,
     PencilIcon,
+    TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Post } from "@/lib/posts";
+import { deletePost } from "@/app/actions/posts";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface DashboardViewProps {
     user: User;
@@ -26,6 +30,24 @@ interface DashboardViewProps {
 }
 
 export function DashboardView({ user, posts, stats }: DashboardViewProps) {
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const router = useRouter();
+
+    const handleDelete = async (slug: string, postId: string) => {
+        if (!confirm("Are you sure you want to delete this post? This action cannot be undone.")) return;
+
+        setDeletingId(postId);
+        try {
+            await deletePost(slug);
+            router.refresh(); // Refresh to update list
+        } catch (error) {
+            console.error("Failed to delete post:", error);
+            alert("Failed to delete post");
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans text-foreground pb-20">
             <Header />
@@ -99,6 +121,16 @@ export function DashboardView({ user, posts, stats }: DashboardViewProps) {
                                                         Edit
                                                     </Button>
                                                 </Link>
+                                                <Button
+                                                    variant="text"
+                                                    size="sm"
+                                                    className="hidden group-hover:inline-flex text-red-500 hover:text-red-700"
+                                                    onClick={() => handleDelete(post.slug, post.id)}
+                                                    isLoading={deletingId === post.id}
+                                                    disabled={!!deletingId}
+                                                >
+                                                    <TrashIcon className="w-4 h-4" />
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>
@@ -115,7 +147,7 @@ export function DashboardView({ user, posts, stats }: DashboardViewProps) {
                     </section>
                 </Container>
             </main>
-        </div>
+        </div >
     );
 }
 

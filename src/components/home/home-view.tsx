@@ -9,6 +9,7 @@ import { Post } from "@/lib/posts";
 import NextImage from "next/image";
 import { cn } from "@/lib/utils";
 import { getPostImage } from "@/lib/image-utils";
+import { formatDate } from "@/lib/utils";
 
 const isValidImage = (url: string | null | undefined) => {
     if (!url) return false;
@@ -21,12 +22,12 @@ const isValidImage = (url: string | null | undefined) => {
 };
 
 interface HomeViewProps {
-    posts: Post[];
+    topAuthorPosts: Post[];
     featuredPost: Post | undefined;
     recentPosts: Post[];
 }
 
-export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
+export function HomeView({ topAuthorPosts, featuredPost, recentPosts }: HomeViewProps) {
     const user = useUser();
 
     return (
@@ -92,7 +93,7 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
                                 </div>
                                 <div className="lg:col-span-5 space-y-8">
                                     <div className="space-y-4">
-                                        <div className="inline-block px-3 py-1 bg-accent/10 text-accent rounded-full text-xs font-bold uppercase tracking-wider">
+                                        <div className="inline-block px-3 py-1 bg-accent/10 text-bg rounded-full text-xs font-bold uppercase tracking-wider">
                                             Featured Story
                                         </div>
                                         <Link href={`/posts/${featuredPost.slug}`} className="block group">
@@ -111,7 +112,7 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
                                         </div>
                                         <div className="text-sm">
                                             <div className="font-semibold text-foreground">{featuredPost.author?.name || "Anonymous"}</div>
-                                            <div className="text-muted-foreground">{featuredPost.readTime} · {new Date(featuredPost.date).toLocaleDateString()}</div>
+                                            <div className="text-muted-foreground">{featuredPost.readTime} · {formatDate(featuredPost.date)}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -125,18 +126,18 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
                     <Container>
                         <div className="flex items-end justify-between mb-20">
                             <h3 className="text-8xl font-serif text-gray-100 dark:text-gray-900 leading-none -ml-4 select-none absolute z-0">
-                                Stories
+                                Author
                             </h3>
                             <div className="relative z-10 w-full flex justify-between items-end">
-                                <Title as="h2" className="text-3xl font-serif font-medium">Recent Writings</Title>
-                                <Link href="/search" className="text-sm font-medium border-b border-foreground pb-0.5 hover:opacity-60 transition-opacity">
-                                    View Archive
+                                <Title as="h2" className="text-3xl font-serif font-medium">Top Author Publishings</Title>
+                                <Link href="/u/sh20raj" className="text-sm font-medium border-b border-foreground pb-0.5 hover:opacity-60 transition-opacity">
+                                    View Profile
                                 </Link>
                             </div>
                         </div>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16 relative z-10">
-                            {recentPosts.map((post) => (
+                            {topAuthorPosts.map((post) => (
                                 <Link key={post.slug} href={`/posts/${post.slug}`} className="group flex flex-col space-y-6">
                                     <div className="aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-900 relative">
                                         {isValidImage(post.coverImage) ? (
@@ -168,7 +169,49 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
                         </div>
                     </Container>
                 </section>
+
+                {/* Fresh from the Community */}
+                <section className="py-24 pt-0">
+                    <Container>
+                        <div className="flex items-center justify-between mb-12 border-b border-gray-100 dark:border-gray-800 pb-4">
+                            <Title as="h2" className="text-2xl font-serif font-medium">Fresh from the Community</Title>
+                            <Link href="/search" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                View All
+                            </Link>
+                        </div>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                            {recentPosts.map((post) => (
+                                <Link key={post.slug} href={`/posts/${post.slug}`} className="group flex flex-col space-y-4">
+                                    <div className="aspect-video w-full overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-900 relative">
+                                        {isValidImage(post.coverImage) ? (
+                                            <NextImage
+                                                src={post.coverImage}
+                                                alt={post.title}
+                                                fill
+                                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-secondary/10 flex items-center justify-center">
+                                                <span className="text-4xl text-muted-foreground/10 font-serif">Unstory</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                                            <span className="font-medium text-foreground">{post.author.name}</span>
+                                            <span>•</span>
+                                            <span>{formatDate(post.date)}</span>
+                                        </div>
+                                        <h4 className="text-xl font-medium font-serif leading-snug group-hover:text-primary transition-colors">
+                                            {post.title}
+                                        </h4>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </Container>
+                </section>
             </main>
-        </div>
+        </div >
     );
 }
