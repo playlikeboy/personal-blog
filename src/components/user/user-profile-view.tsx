@@ -133,7 +133,7 @@ export function UserProfileView({ username }: UserProfileViewProps) {
         <div className="flex min-h-screen flex-col bg-background font-sans">
             <Header />
             <main className="flex-1 py-12 md:py-20 pb-40">
-                <Container className="max-w-4xl">
+                <Container className="max-w-4xl mt-8">
                     <div className="flex flex-col items-center text-center space-y-6 mb-24">
                         <div className="relative w-32 h-32 rounded-full overflow-hidden bg-secondary border-4 border-background shadow-xl">
                             {user.avatar ? (

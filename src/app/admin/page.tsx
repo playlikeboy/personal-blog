@@ -1,6 +1,5 @@
 import { getDashboardStats } from "./actions";
 import { StatsCard } from "@/components/admin/stats-card";
-import { FileText, Users, Eye, Mail } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -13,25 +12,25 @@ export default async function AdminDashboardPage() {
                 <StatsCard
                     title="Total Posts"
                     value={stats.totalPosts}
-                    icon={FileText}
+                    icon="posts"
                     color="bg-blue-50 text-blue-600"
                 />
                 <StatsCard
                     title="Total Users"
                     value={stats.totalUsers}
-                    icon={Users}
+                    icon="users"
                     color="bg-green-50 text-green-600"
                 />
                 <StatsCard
                     title="Total Views"
                     value={stats.totalViews}
-                    icon={Eye}
+                    icon="views"
                     color="bg-purple-50 text-purple-600"
                 />
                 <StatsCard
                     title="Subscribers"
                     value={stats.totalSubscribers}
-                    icon={Mail}
+                    icon="subscribers"
                     color="bg-orange-50 text-orange-600"
                 />
             </div>

@@ -1,15 +1,25 @@
 "use client";
 
 import { Text, Title } from "rizzui";
+import { FileText, Users, Eye, Mail } from "lucide-react";
 
 interface StatsCardProps {
     title: string;
     value: number;
-    icon: any;
+    icon: "posts" | "users" | "views" | "subscribers";
     color: string;
 }
 
-export function StatsCard({ title, value, icon: Icon, color }: StatsCardProps) {
+const ICONS = {
+    posts: FileText,
+    users: Users,
+    views: Eye,
+    subscribers: Mail,
+};
+
+export function StatsCard({ title, value, icon, color }: StatsCardProps) {
+    const Icon = ICONS[icon];
+
     return (
         <div className="bg-white p-6 rounded-xl border flex items-center justify-between">
             <div>

@@ -69,15 +69,15 @@ export async function updateUserSettings(settings: { showFollowersCount?: boolea
 
 export async function getFollowerStats(userId: string) {
     // Check if user allows showing stats
-    const user = await db.query.users.findFirst({
-        where: eq(users.id, userId),
-        columns: { showFollowersCount: true }
-    });
+    // Check if user allows showing stats (Previously strictly enforced, now defaulting to visible as per request)
+    // const user = await db.query.users.findFirst({
+    //     where: eq(users.id, userId),
+    //     columns: { showFollowersCount: true }
+    // });
 
-    if (!user?.showFollowersCount) {
-        // If hidden, return null or 0 with a flag
-        return { followers: 0, following: 0, hidden: true };
-    }
+    // if (!user?.showFollowersCount) {
+    //     return { followers: 0, following: 0, hidden: true };
+    // }
 
     // Rough counts
     const followers = await db.select({ count: sql<number>`count(*)` })

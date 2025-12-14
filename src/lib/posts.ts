@@ -12,6 +12,7 @@ export interface Post {
     author: {
         name: string;
         avatar: string;
+        username: string;
     };
     authorId: string; // Expose Author ID for filtering
     readTime: string;
@@ -117,6 +118,7 @@ export function mapDbPostToPost(dbPost: any): Post {
         author: {
             name: dbPost.author?.name || "Unknown",
             avatar: dbPost.author?.avatar || "",
+            username: dbPost.author?.username || "",
         },
         authorId: dbPost.authorId,
         readTime: dbPost.readTime || "5 min read",

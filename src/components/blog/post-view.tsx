@@ -126,7 +126,7 @@ export function PostView({ post }: PostViewProps) {
                             {post.title}
                         </Title>
                         <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-                            <Link href={`/@${post.author?.name ? post.author.name.replace(/\s+/g, '-').toLowerCase() : post.authorId}`} className="hover:text-foreground transition-colors font-medium">
+                            <Link href={`/@${post.author?.username || post.authorId}`} className="hover:text-foreground transition-colors font-medium">
                                 {post.author?.name || "Author"}
                             </Link>
                             <span>•</span>

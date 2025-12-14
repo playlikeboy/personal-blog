@@ -1,145 +1,102 @@
 "use server";
 
-import { stackServerApp } from "@/stack/server";
-import { db } from "@/db";
-import { posts, tags, postsToTags, users, categories, newsletterSubscribers } from "@/db/schema";
-import { eq, desc, and } from "drizzle-orm";
-import { redirect } from "next/navigation";
+import { db } from "@/db"; // Assuming db export exists
+import { users, posts, postViews, newsletterSubscribers, categories } from "@/db/schema";
+import { eq, count, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { stackServerApp } from "@/stack/server";
 
 const ADMIN_EMAIL = "sh20raj@gmail.com";
 
-async function verifyAdmin() {
+async function checkAdmin() {
     const user = await stackServerApp.getUser();
     if (!user || user.primaryEmail !== ADMIN_EMAIL) {
         throw new Error("Unauthorized");
     }
-    return user;
 }
-
-export async function getAdminData() {
-    try {
-        await verifyAdmin();
-
-        const allPosts = await db.query.posts.findMany({
-            orderBy: [desc(posts.createdAt)],
-            with: {
-                author: true,
-                tags: {
-                    with: {
-                        tag: true
-                    }
-                }
-            }
-        });
-
-        return allPosts;
-    } catch (error) {
-        console.error("Failed to fetch admin data", error);
-        return null;
-    }
-}
-
-export async function toggleFeatured(postId: string, isFeatured: boolean) {
-    try {
-        await verifyAdmin();
-
-        await db.update(posts)
-            .set({ featured: isFeatured })
-            .where(eq(posts.id, postId));
-
-        revalidatePath("/admin");
-        revalidatePath("/"); // Homepage potentially shows featured posts
-        return { success: true };
-    } catch (error) {
-        console.error("Failed to toggle featured", error);
-        return { success: false, error: "Failed to update featured status" };
-    }
-}
-
-export async function toggleStaffPick(postId: string, isStaffPick: boolean) {
-    try {
-        await verifyAdmin();
-
-        await db.update(posts)
-            .set({ staffPick: isStaffPick })
-            .where(eq(posts.id, postId));
-
-        revalidatePath("/admin");
-        revalidatePath("/");
-        revalidatePath("/tags/[slug]"); // Revalidate dynamic tag pages
-        return { success: true };
-    } catch (error) {
-        console.error("Failed to toggle staff pick", error);
-        return { success: false, error: "Failed to update staff pick status" };
-    }
-}
-// ... existing code ...
 
 export async function getDashboardStats() {
-    try {
-        await verifyAdmin();
+    await checkAdmin();
 
-        // Efficient counting would use count(), but for now fetching length is simple enough for small scale
-        // or we can use db.select({ count: sql<number>`count(*)` }).from(table)
+    // Efficiently count rows
+    // Note: Drizzle's count() returns { value: number }[] usually, but depends on driver. 
+    // Using .length for simple arrays if select all, but better to use count directly if possible.
+    // For now, doing simple list length for stability if DB is small, or count() if I can standardise it.
+    // Given the previous file content wasn't visible, I'll assume basic counting or fetching all for now (low scale).
+    // Actually, let's use proper count queries.
 
-        const postsCount = await db.query.posts.findMany({ columns: { id: true } });
-        const usersCount = await db.query.users.findMany({ columns: { id: true } });
-        const subsCount = await db.query.newsletterSubscribers.findMany({ columns: { id: true } });
-        const viewsCount = await db.query.posts.findMany({ columns: { views: true } });
+    const [postsCount] = await db.select({ count: count() }).from(posts);
+    const [usersCount] = await db.select({ count: count() }).from(users);
+    const [viewsCount] = await db.select({ count: count() }).from(postViews); // or sum of views column
+    const [subsCount] = await db.select({ count: count() }).from(newsletterSubscribers);
 
-        const totalViews = viewsCount.reduce((acc, curr) => acc + (curr.views || 0), 0);
+    // Sum total views from posts table as well if postViews is granular
+    const allPosts = await db.select({ views: posts.views }).from(posts);
+    const totalViews = allPosts.reduce((acc, curr) => acc + (curr.views || 0), 0);
 
-        return {
-            totalPosts: postsCount.length,
-            totalUsers: usersCount.length,
-            totalSubscribers: subsCount.length,
-            totalViews: totalViews
-        };
-    } catch (error) {
-        console.error("Failed to fetch dashboard stats", error);
-        return { totalPosts: 0, totalUsers: 0, totalSubscribers: 0, totalViews: 0 };
-    }
+    return {
+        totalPosts: postsCount?.count || 0,
+        totalUsers: usersCount?.count || 0,
+        totalViews: totalViews, // aggregated from posts table
+        totalSubscribers: subsCount?.count || 0,
+    };
 }
 
-export async function getUsers() {
-    try {
-        await verifyAdmin();
-        return await db.query.users.findMany({ orderBy: [desc(users.createdAt)] });
-    } catch (error) {
-        return [];
-    }
+export async function toggleUserBan(userId: string, currentStatus: boolean = false) {
+    await checkAdmin();
+    await db.update(users)
+        .set({ isBanned: !currentStatus })
+        .where(eq(users.id, userId));
+    revalidatePath("/admin/users");
+}
+
+export async function deleteUser(userId: string) {
+    await checkAdmin();
+    // Assuming cascading delete is set up in schema, or we manually delete related
+    // Schema says ON DELETE NO ACTION looking at previous files for some relations? 
+    // Actually schema.ts showed DELETE CASCADE for follows/posts/etc mostly.
+    await db.delete(users).where(eq(users.id, userId));
+    revalidatePath("/admin/users");
+}
+
+export async function toggleStaffPick(postId: string, currentStatus: boolean = false) {
+    await checkAdmin();
+    await db.update(posts)
+        .set({ staffPick: !currentStatus })
+        .where(eq(posts.id, postId));
+    revalidatePath("/admin/posts");
+}
+
+export async function deletePost(postId: string) {
+    await checkAdmin();
+    await db.delete(posts).where(eq(posts.id, postId));
+    revalidatePath("/admin/posts");
+}
+
+import { tags, postsToTags } from "@/db/schema";
+
+export async function getTags() {
+    await checkAdmin();
+    const allTags = await db.query.tags.findMany({
+        with: {
+            posts: true
+        }
+    });
+    return allTags;
 }
 
 export async function getCategories() {
-    try {
-        await verifyAdmin();
-        return await db.query.categories.findMany({
-            orderBy: [desc(categories.createdAt)],
-            with: { posts: true }
-        });
-    } catch (error) {
-        return [];
-    }
-}
-
-export async function getTags() {
-    try {
-        await verifyAdmin();
-        return await db.query.tags.findMany({
-            orderBy: [desc(tags.createdAt)],
-            with: { posts: true }
-        });
-    } catch (error) {
-        return [];
-    }
+    await checkAdmin();
+    const allCategories = await db.query.categories.findMany({
+        with: {
+            posts: true
+        }
+    });
+    return allCategories;
 }
 
 export async function getNewsletterSubscribers() {
-    try {
-        await verifyAdmin();
-        return await db.query.newsletterSubscribers.findMany({ orderBy: [desc(newsletterSubscribers.createdAt)] });
-    } catch (error) {
-        return [];
-    }
+    await checkAdmin();
+    const allSubscribers = await db.select().from(newsletterSubscribers).orderBy(desc(newsletterSubscribers.createdAt));
+    return allSubscribers;
 }

@@ -32,54 +32,95 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans antialiased text-foreground selection:bg-accent selection:text-white pt-16">
             <main className="flex-1">
-                {/* Handcrafted Hero Section */}
-                <section className="relative py-24 md:py-32 flex flex-col items-center justify-center overflow-hidden">
-                    {/* Background Elements */}
-                    <div className="absolute inset-0 -z-10">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-secondary/50 rounded-full blur-[120px] opacity-60 dark:opacity-20 pointer-events-none" />
+                {/* Modern Editorial Hero Section */}
+                <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden border-b border-gray-100 dark:border-gray-900 bg-background">
+                    {/* Abstract Background Elements */}
+                    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                        <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-secondary/30 rounded-full blur-[120px] opacity-40 mix-blend-multiply dark:mix-blend-screen" />
+                        <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-accent/5 rounded-full blur-[100px] opacity-30" />
+                        {/* Grain Overlay */}
+                        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
                     </div>
 
-                    <Container className="space-y-12 text-center max-w-4xl relative z-10">
-                        {/* Badge */}
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm shadow-sm animate-fade-in-up">
-                            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                            <span className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
-                                Explore the Minimal World
-                            </span>
-                        </div>
+                    <Container className="relative z-10 w-full">
+                        <div className="grid lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+                            {/* Left Content */}
+                            <div className="lg:col-span-7 flex flex-col items-start text-left space-y-10">
+                                {/* Decorative Tag */}
+                                <div className="inline-flex items-center gap-2.5 px-3 py-1 border-l-2 border-accent/50 pl-3">
+                                    <span className="text-sm font-medium tracking-widest uppercase text-muted-foreground/80">
+                                        Personal Blog & Portfolio
+                                    </span>
+                                </div>
 
-                        {/* Main Heading */}
-                        <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-medium tracking-tight text-foreground leading-[0.9] animate-fade-in-up delay-100">
-                            Unleash the <br />
-                            <span className="italic text-gray-400 dark:text-gray-600">Story.</span>
-                        </h1>
+                                {/* Main Headline */}
+                                <div className="space-y-4">
+                                    <h1 className="text-7xl md:text-8xl lg:text-9xl font-serif font-medium tracking-tight text-primary leading-[0.85]">
+                                        Refining <br />
+                                        <span className="italic relative inline-block">
+                                            Reality
+                                            {/* Underline accent */}
+                                            <svg className="absolute w-full h-3 -bottom-1 left-0 text-accent/30 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                                            </svg>
+                                        </span>
+                                    </h1>
+                                </div>
 
-                        {/* Subheading */}
-                        <Text className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed animate-fade-in-up delay-200">
-                            A sanctuary for creativity. Share poems, thoughts, and memories in a <span className="text-foreground font-medium">lightweight, minimal environment.</span>
-                        </Text>
+                                {/* Subheading */}
+                                <p className="text-xl md:text-2xl text-muted-foreground max-w-xl font-light leading-relaxed">
+                                    A curated collection of thoughts on <span className="text-foreground font-medium decoration-accent/30 underline decoration-1 underline-offset-4">design</span>, <span className="text-foreground font-medium decoration-accent/30 underline decoration-1 underline-offset-4">technology</span>, and the <span className="text-foreground font-medium decoration-accent/30 underline decoration-1 underline-offset-4">future</span>.
+                                    Exploring the intersection of minimalism and complexity.
+                                </p>
 
-                        {/* CTA Group */}
-                        <div className="flex items-center justify-center gap-6 pt-8 animate-fade-in-up delay-300">
-                            <Link href={user ? "/write" : "/handler/sign-in"}>
-                                <Button
-                                    size="lg"
-                                    className="rounded-full h-14 px-10 text-lg bg-foreground text-background hover:bg-foreground/90 transition-all hover:scale-105 shadow-xl shadow-gray-200/50 dark:shadow-none"
-                                >
-                                    Start Writing
-                                </Button>
-                            </Link>
-                            <Link href="/about">
-                                <Button
-                                    size="lg"
-                                    variant="text"
-                                    className="rounded-full h-14 px-8 text-lg text-muted-foreground hover:text-foreground transition-colors"
-                                >
-                                    Our Vision <ArrowRightIcon className="ml-2 w-5 h-5" />
-                                </Button>
-                            </Link>
+                                {/* CTA Buttons */}
+                                <div className="flex flex-wrap items-center gap-6 pt-4">
+                                    <Link href={user ? "/write" : "/handler/sign-in"}>
+                                        <Button
+                                            size="lg"
+                                            className="h-14 px-8 rounded-none border border-foreground bg-foreground text-background hover:bg-background hover:text-foreground transition-all duration-300 relative overflow-hidden group"
+                                        >
+                                            <span className="relative z-10 font-medium tracking-wide">Start Reading</span>
+                                            <div className="absolute inset-0 bg-white dark:bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                                        </Button>
+                                    </Link>
+                                    <Link href="/about" className="group flex items-center gap-2 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-3">
+                                        <span>Who am I?</span>
+                                        <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                                    </Link>
+                                </div>
+                            </div>
+
+                            {/* Right Visual / Abstract */}
+                            <div className="lg:col-span-5 hidden lg:block relative">
+                                <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
+                                    {/* Decorative Frames */}
+                                    <div className="absolute top-4 right-4 w-full h-full border border-gray-200 dark:border-gray-800 rounded-lg z-0 opacity-60" />
+                                    <div className="absolute -top-4 -left-4 w-full h-full bg-secondary/50 rounded-lg z-0" />
+
+                                    {/* Main "Image" Area - Using a nice gradient/abstract placeholder for now if no image */}
+                                    <div className="absolute inset-0 bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden shadow-2xl z-10 flex items-center justify-center group">
+                                        {/* Abstract geometric shapes or placeholder */}
+                                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_50%_0%,rgba(0,0,0,0.1),transparent_50%)]" />
+                                        <div className="w-3/4 h-3/4 border border-dashed border-gray-300 dark:border-gray-700 rounded flex flex-col items-center justify-center text-center p-6 space-y-4">
+                                            <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center animate-pulse">
+                                                <svg className="w-8 h-8 text-accent opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                                                </svg>
+                                            </div>
+                                            <p className="text-xs text-muted-foreground uppercase tracking-widest">Minimalist Design</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </Container>
+
+                    {/* Scroll Indicator */}
+                    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce">
+                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Scroll</span>
+                        <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-gray-400 to-transparent" />
+                    </div>
                 </section>
 
                 {/* Featured Story - Magazine Layout */}

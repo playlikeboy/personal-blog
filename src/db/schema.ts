@@ -21,6 +21,7 @@ export const users = sqliteTable("users", {
     twitter: text("twitter"),
     github: text("github"),
     website: text("website"),
+    isBanned: integer("is_banned", { mode: "boolean" }).default(false),
     showFollowersCount: integer("show_followers_count", { mode: "boolean" }).default(false),
     createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(strftime('%s', 'now'))`),
 });
