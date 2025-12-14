@@ -41,13 +41,13 @@ export function UserProfileView({ username }: UserProfileViewProps) {
                 setLoading(false);
 
                 // If user loaded, fetch follow status & stats
-                if (userData?.user?.id) {
-                    getFollowStatus(userData.user.id).then(status => {
+                if ((userData as any)?.user?.id) {
+                    getFollowStatus((userData as any).user.id).then(status => {
                         setIsFollowing(status.isFollowing);
                         setIsSelf(status.isSelf);
                     });
 
-                    getFollowerStats(userData.user.id).then(setStats);
+                    getFollowerStats((userData as any).user.id).then(setStats);
                 }
             })
             .catch(() => {
@@ -180,9 +180,8 @@ export function UserProfileView({ username }: UserProfileViewProps) {
                             <div className="flex items-center justify-center gap-3 pt-4">
                                 {!isSelf && (
                                     <Button
-                                        rounded="pill"
                                         variant={isFollowing ? "outline" : "solid"}
-                                        className={cn("px-6", isFollowing ? "border-gray-200" : "")}
+                                        className={cn("px-6 rounded-full", isFollowing ? "border-gray-200" : "")}
                                         onClick={handleFollow}
                                         isLoading={isPending}
                                     >
@@ -202,9 +201,8 @@ export function UserProfileView({ username }: UserProfileViewProps) {
 
                                 <Tooltip content="Share Profile" placement="top">
                                     <ActionIcon
-                                        rounded="full"
                                         variant="outline"
-                                        className="border-gray-200"
+                                        className="border-gray-200 rounded-full"
                                         onClick={handleShare}
                                     >
                                         <ArrowUpTrayIcon className="w-5 h-5" />

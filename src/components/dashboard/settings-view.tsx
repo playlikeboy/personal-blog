@@ -1,3 +1,5 @@
+"use client";
+
 import { useUser } from "@stackframe/stack";
 import { useState, useEffect } from "react";
 import { Button, Input, Title, Text, Loader, Textarea, Switch } from "rizzui";

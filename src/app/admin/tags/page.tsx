@@ -1,5 +1,5 @@
 import { getTags } from "../actions";
-import { Badge } from "rizzui";
+
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,9 @@ export default async function AdminTagsPage() {
                         {tags.map((tag) => (
                             <tr key={tag.id}>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    <Badge variant="flat">{tag.name}</Badge>
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        {tag.name}
+                                    </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {tag.slug}

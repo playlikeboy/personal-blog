@@ -64,7 +64,7 @@ export async function updateUserSettings(settings: { showFollowersCount?: boolea
         .where(eq(users.id, user.id));
 
     revalidatePath("/dashboard");
-    revalidatePath(`/@${user.username || user.id}`);
+    revalidatePath(`/@${(user as any).username || user.id}`);
 }
 
 export async function getFollowerStats(userId: string) {

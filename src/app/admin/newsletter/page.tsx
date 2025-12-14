@@ -1,6 +1,6 @@
 import { getNewsletterSubscribers } from "../actions";
 import { format } from "date-fns";
-import { Badge } from "rizzui";
+
 
 export const dynamic = "force-dynamic";
 
@@ -26,9 +26,9 @@ export default async function AdminNewsletterPage() {
                                     {sub.email}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <Badge color={sub.isActive ? "success" : "danger"}>
+                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sub.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
                                         {sub.isActive ? "Active" : "Inactive"}
-                                    </Badge>
+                                    </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {sub.createdAt ? format(sub.createdAt, "MMM d, yyyy") : "-"}

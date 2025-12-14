@@ -7,9 +7,7 @@ import { posts, tags, postsToTags } from "@/db/schema";
 import { eq, desc, and, count, sql } from "drizzle-orm";
 import { mapDbPostToPost } from "@/lib/posts";
 import { TagFilter } from "@/components/blog/tag-filter";
-import Link from "next/link";
-import { Button } from "rizzui";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { PaginationControl } from "@/components/ui/pagination-control";
 
 interface TagPageProps {
     params: Promise<{
@@ -161,33 +159,11 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
                             </div>
 
                             {/* Pagination */}
-                            {totalPages > 1 && (
-                                <div className="mt-16 flex justify-center items-center gap-4">
-                                    <Button
-                                        as={Link}
-                                        href={`?sort=${sort}&page=${pageNum - 1}`}
-                                        variant="outline"
-                                        disabled={pageNum <= 1}
-                                        className={pageNum <= 1 ? "pointer-events-none opacity-50" : ""}
-                                    >
-                                        <ChevronLeft className="w-4 h-4 mr-2" />
-                                        Previous
-                                    </Button>
-                                    <span className="text-sm font-medium">
-                                        Page {pageNum} of {totalPages}
-                                    </span>
-                                    <Button
-                                        as={Link}
-                                        href={`?sort=${sort}&page=${pageNum + 1}`}
-                                        variant="outline"
-                                        disabled={pageNum >= totalPages}
-                                        className={pageNum >= totalPages ? "pointer-events-none opacity-50" : ""}
-                                    >
-                                        Next
-                                        <ChevronRight className="w-4 h-4 ml-2" />
-                                    </Button>
-                                </div>
-                            )}
+                            <PaginationControl
+                                currentPage={pageNum}
+                                totalPages={totalPages}
+                                queryParams={{ sort }}
+                            />
                         </>
                     ) : (
                         <div className="py-20 text-center bg-gray-50 rounded-2xl">

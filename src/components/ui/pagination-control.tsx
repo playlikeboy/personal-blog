@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "rizzui";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
