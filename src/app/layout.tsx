@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { StackProvider, StackTheme } from "@stackframe/stack";
 import { stackClientApp } from "../stack/client";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
@@ -49,6 +49,23 @@ export const metadata: Metadata = {
 			"max-snippet": -1,
 		},
 	},
+	appleWebApp: {
+		capable: true,
+		statusBarStyle: "default",
+		title: "Unstory",
+	},
+	applicationName: "Unstory",
+	formatDetection: {
+		telephone: false,
+	},
+};
+
+export const viewport: Viewport = {
+	themeColor: "#ffffff",
+	width: "device-width",
+	initialScale: 1,
+	maximumScale: 1,
+	userScalable: false, // For "native" feel
 };
 
 const jsonLd = {
@@ -73,7 +90,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>
-				<link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
+				<link rel="icon" href="/favicon.ico" sizes="any" />
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased bg-background text-foreground`}>
 				<StackProvider app={stackClientApp}>

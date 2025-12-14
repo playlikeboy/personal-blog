@@ -44,7 +44,7 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm shadow-sm animate-fade-in-up">
                             <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
                             <span className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
-                                The New Standard
+                                Explore the Minimal World
                             </span>
                         </div>
 
