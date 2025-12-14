@@ -19,7 +19,7 @@ export function PostCard({ post }: PostCardProps) {
             className="group block"
         >
             <Link href={`/posts/${post.slug}`} className="block relative aspect-[3/2] overflow-hidden bg-muted mb-4">
-                {post.coverImage && (
+                {post.coverImage && (post.coverImage.startsWith('http') || post.coverImage.startsWith('/')) && (
                     <Image
                         src={post.coverImage}
                         alt={post.title}

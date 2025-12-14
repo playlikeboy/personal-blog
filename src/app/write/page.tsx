@@ -27,6 +27,31 @@ export default function WritePage() {
     // Initial Data for Edit Mode
     const [initialData, setInitialData] = useState<Partial<PublishData> | null>(null);
 
+    // Load from LocalStorage if not editing
+    useEffect(() => {
+        if (!editSlug) {
+            const savedTitle = localStorage.getItem("draft-title");
+            const savedContent = localStorage.getItem("draft-content");
+            if (savedTitle) setTitle(savedTitle);
+            if (savedContent) {
+                try {
+                    setContent(JSON.parse(savedContent));
+                } catch (e) { console.error(e); }
+            }
+        }
+    }, [editSlug]);
+
+    // Save to LocalStorage
+    useEffect(() => {
+        if (!editSlug) {
+            const timeout = setTimeout(() => {
+                localStorage.setItem("draft-title", title);
+                localStorage.setItem("draft-content", JSON.stringify(content));
+            }, 1000);
+            return () => clearTimeout(timeout);
+        }
+    }, [title, content, editSlug]);
+
     useEffect(() => {
         if (editSlug) {
             fetch(`/api/posts/${editSlug}`)
@@ -76,6 +101,11 @@ export default function WritePage() {
             });
 
             if (res.ok) {
+                // Clear draft
+                if (!editSlug) {
+                    localStorage.removeItem("draft-title");
+                    localStorage.removeItem("draft-content");
+                }
                 const post = await res.json() as { slug: string };
                 router.push(`/posts/${post.slug}`);
             } else {
@@ -160,8 +190,20 @@ export default function WritePage() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onConfirm={handlePublish}
+                postTitle={title}
+                postContext={extractTextFromValue(content)}
+                initialTags={initialData?.tags}
             // TODO: Wire up initial data to modal default values if needed
             />
         </div>
     );
+}
+
+function extractTextFromValue(value: any[]): string {
+    if (!Array.isArray(value)) return "";
+    return value.map(node => {
+        if (node.text) return node.text;
+        if (node.children) return extractTextFromValue(node.children);
+        return "";
+    }).join("\n");
 }

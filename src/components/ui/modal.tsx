@@ -9,9 +9,10 @@ interface ModalProps {
     onClose: () => void;
     title?: string;
     children: ReactNode;
+    className?: string;
 }
 
-export function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, className }: ModalProps) {
     return (
         <Transition show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -38,7 +39,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+                            <Dialog.Panel className={`w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 ${className || 'max-w-lg'}`}>
                                 <div className="flex items-center justify-between mb-4">
                                     {title && (
                                         <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
