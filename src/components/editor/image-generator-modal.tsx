@@ -49,9 +49,9 @@ export function ImageGeneratorModal({ isOpen, onClose, onSelectImage, initialTit
     const handleGenerate = () => {
         setIsLoading(true);
         // Construct URL
-        // https://enter.pollinations.ai/api/generate/image/${prompt}?model=flux&width=576&seed=${seed}&enhance=true&nologo=true
+        // New Format: https://image.pollinations.ai/prompt/{prompt}?params...
         const encodedPrompt = encodeURIComponent(prompt);
-        const url = `https://enter.pollinations.ai/api/generate/image/${encodedPrompt}?model=${model}&width=${width}&height=${height}&seed=${seed}&enhance=${enhance}&nologo=${nologo}`;
+        const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=${nologo}&enhance=${enhance}`;
 
         // Pre-fetch to validate (optional, but ensures it loads)
         const img = new window.Image();
@@ -61,8 +61,17 @@ export function ImageGeneratorModal({ isOpen, onClose, onSelectImage, initialTit
             setIsLoading(false);
         };
         img.onerror = () => {
-            alert("Failed to generate image. Please try again.");
+            // Even if it fails to load immediately, sometimes it's just slow. 
+            // But usually this means error.
+            console.error("Image load failed");
             setIsLoading(false);
+            // check if its a 404 or just slow? 
+            // For now, let's set it anyway so user can see broken image if it really is broken, 
+            // or maybe it loads eventually.
+            // Actually, let's keep the error behavior but maybe softer?
+            // "Failed to generate image. Please try again."
+            alert("Failed to load image preview. It might still work if you use it.");
+            setGeneratedUrl(url);
         };
     };
 
