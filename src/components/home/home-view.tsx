@@ -32,112 +32,45 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans antialiased text-foreground selection:bg-accent selection:text-white pt-16">
             <main className="flex-1">
-                {/* Modern Editorial Hero Section */}
-                <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden border-b border-gray-100 dark:border-gray-900 bg-background">
-                    {/* Abstract Background Elements */}
-                    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                        <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-secondary/30 rounded-full blur-[120px] opacity-40 mix-blend-multiply dark:mix-blend-screen" />
-                        <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-accent/5 rounded-full blur-[100px] opacity-30" />
-                        {/* Grain Overlay */}
-                        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
-                    </div>
+                {/* Modern Minimal Hero Section */}
+                <section className="relative min-h-[80vh] flex flex-col justify-center items-center overflow-hidden border-b border-gray-100 dark:border-gray-900 bg-background text-center">
+                    {/* Grain Overlay only - No Blobs */}
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
 
-                    <Container className="relative z-10 w-full">
-                        <div className="grid lg:grid-cols-12 gap-12 lg:gap-24 items-center">
-                            {/* Left Content */}
-                            <div className="lg:col-span-12 xl:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-10 lg:pl-10">
-                                {/* Decorative Tag */}
-                                <div className="inline-flex items-center gap-2.5 px-3 py-1 border-l-2 border-accent/50 pl-3">
-                                    <span className="text-sm font-medium tracking-widest uppercase text-muted-foreground/80">
-                                        Unstory.live
-                                    </span>
-                                </div>
+                    <Container className="relative z-10 w-full max-w-4xl mx-auto px-4 flex flex-col items-center gap-10">
 
-                                {/* Main Headline */}
-                                <div className="space-y-4">
-                                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-medium tracking-tight text-primary leading-[1]">
-                                        Your Story. Owned. <br />
-                                        <span className="italic relative inline-block text-gray-500 dark:text-gray-400">
-                                            Uncensored.
-                                        </span> <br />
-                                        Timeless.
-                                    </h1>
-                                </div>
+                        {/* Main Headline */}
+                        <div className="space-y-6">
+                            <h1 className="text-5xl md:text-5xl lg:text-6xl font-serif font-medium tracking-tight text-primary leading-[1.1]">
+                                Your Story. Owned. <br />
+                                <span className="italic text-gray-500 dark:text-gray-400">
+                                    Uncensored.
+                                </span>{" "}
+                                Timeless.
+                            </h1>
+                        </div>
 
-                                {/* Subheading */}
-                                <p className="text-xl md:text-2xl text-muted-foreground/90 max-w-2xl font-light leading-relaxed">
-                                    Unstory is a <span className="text-foreground font-medium">creator-first</span> publishing platform where ideas live beyond algorithms. Write freely, build an audience directly, and <span className="text-foreground font-medium decoration-accent/30 underline decoration-1 underline-offset-4">own every word</span> you publish.
-                                </p>
+                        {/* Subheading */}
+                        <p className="text-xl md:text-xl text-muted-foreground/90 max-w-2xl font-light leading-relaxed">
+                            Unstory is a <span className="text-foreground font-medium">creator-first</span> publishing platform where ideas live beyond algorithms. Write freely, build an audience directly, and <span className="text-foreground font-medium decoration-accent/30 underline decoration-1 underline-offset-4">own every word</span>.
+                        </p>
 
-                                {/* CTA Buttons */}
-                                <div className="flex flex-col sm:flex-row items-center gap-6 pt-2 w-full sm:w-auto">
-                                    <Link href={user ? "/write" : "/handler/sign-in"} className="w-full sm:w-auto">
-                                        <Button
-                                            size="lg"
-                                            className="h-14 w-full sm:w-auto px-10 rounded-full border border-foreground bg-foreground text-background hover:bg-background hover:text-foreground transition-all duration-300 relative overflow-hidden group shadow-lg"
-                                        >
-                                            <span className="relative z-10 font-medium tracking-wide text-lg">Start Writing — Free</span>
-                                            <div className="absolute inset-0 bg-white dark:bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                                        </Button>
-                                    </Link>
-                                    <Link href="/search" className="group flex items-center gap-2 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-3">
-                                        <span>Explore Stories</span>
-                                        <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                                    </Link>
-                                </div>
-
-                                {/* Value Highlights */}
-                                <div className="pt-8 w-full">
-                                    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-3 text-sm font-medium text-muted-foreground/80">
-                                        <div className="flex items-center gap-2">
-                                            <CheckIcon className="w-4 h-4 text-accent" />
-                                            <span>Own your content & audience</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <CheckIcon className="w-4 h-4 text-accent" />
-                                            <span>Clean, distraction-free reading</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <CheckIcon className="w-4 h-4 text-accent" />
-                                            <span>Built for long-form thinkers</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <CheckIcon className="w-4 h-4 text-accent" />
-                                            <span>No algorithm. No shadow bans.</span>
-                                        </div>
-                                    </div>
-                                    <p className="mt-8 text-xs uppercase tracking-widest text-muted-foreground/60">
-                                        Built for writers, thinkers, and internet natives who care about signal over noise.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Right Visual / Abstract - Hidden for now to focus on copy/typography as per request or kept minimal */}
-                            <div className="hidden xl:block lg:col-span-5 relative h-full min-h-[600px] flex items-center">
-                                <div className="relative w-full aspect-[4/5] max-w-md mx-auto">
-                                    {/* Decorative Frames for specific Unstory vibe */}
-                                    <div className="absolute top-8 right-8 w-full h-full border border-gray-200 dark:border-gray-800 rounded-none z-0 opacity-60" />
-                                    <div className="absolute -top-8 -left-8 w-full h-full bg-secondary/30 rounded-none z-0" />
-
-                                    <div className="absolute inset-0 bg-gray-50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center justify-center p-12 text-center shadow-2xl">
-                                        <div className="space-y-8 max-w-xs">
-                                            <div className="w-20 h-1 absolute top-12 left-1/2 -translate-x-1/2 bg-foreground/10" />
-                                            <p className="font-serif text-3xl leading-snug text-foreground/80 italic">
-                                                "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion."
-                                            </p>
-                                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">— Camus</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        {/* CTA Buttons - Simplified */}
+                        <div className="flex flex-col sm:flex-row items-center gap-6 pt-4">
+                            <Link href={user ? "/write" : "/handler/sign-in"}>
+                                <Button
+                                    size="md"
+                                    className="h-14 px-10 rounded-full border border-foreground bg-foreground text-background hover:bg-background hover:text-foreground transition-all duration-300 shadow-lg text-lg font-medium"
+                                >
+                                    Start Writing — Free
+                                </Button>
+                            </Link>
+                            <Link href="/search" className="group flex items-center gap-2 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-3">
+                                <span>Explore Stories</span>
+                                <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                            </Link>
                         </div>
                     </Container>
-
-                    {/* Scroll Indicator */}
-                    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce">
-                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Scroll</span>
-                        <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-gray-400 to-transparent" />
-                    </div>
                 </section>
 
                 {/* Featured Story - Magazine Layout */}

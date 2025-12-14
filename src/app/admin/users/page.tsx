@@ -2,8 +2,6 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { desc } from "drizzle-orm";
 import { toggleUserBan, deleteUser } from "../actions";
-import { Button } from "rizzui"; // Using RizzUI for buttons as requested/configured
-import { Badge } from "rizzui";
 import { Trash2, Ban, CheckCircle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -40,21 +38,21 @@ export default async function AdminUsersPage() {
                                                 {/* Fallback to simple img if Avatar component has issues */}
                                                 <img
                                                     src={user.avatar || `https://ui-avatars.com/api/?name=${user.name || 'User'}`}
-alt = { user.name || "User" }
-className = "w-full h-full object-cover"
-    />
+                                                    alt={user.name || "User"}
+                                                    className="w-full h-full object-cover"
+                                                />
                                             </div >
-    <div>
-        <div className="font-medium text-gray-900">{user.name || "Unknown"}</div>
-        <div className="text-gray-500 text-xs">{user.email}</div>
-    </div>
+                                            <div>
+                                                <div className="font-medium text-gray-900">{user.name || "Unknown"}</div>
+                                                <div className="text-gray-500 text-xs">{user.email}</div>
+                                            </div>
                                         </div >
                                     </td >
                                     <td className="px-6 py-4">
                                         {user.isBanned ? (
-                                            <Badge color="danger" variant="flat">Banned</Badge>
+                                            <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Banned</span>
                                         ) : (
-                                            <Badge color="success" variant="flat">Active</Badge>
+                                            <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Active</span>
                                         )}
                                     </td>
                                     <td className="px-6 py-4 text-gray-500">
@@ -63,29 +61,23 @@ className = "w-full h-full object-cover"
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
                                             <form action={toggleUserBan.bind(null, user.id, user.isBanned || false)}>
-                                                <Button
+                                                <button
                                                     type="submit"
-                                                    variant="text"
-                                                    size="sm"
-                                                    color={user.isBanned ? "success" : "danger"}
-                                                    className="h-8 w-8 p-0"
+                                                    className={`p-1.5 rounded-md transition-colors ${user.isBanned ? "text-green-600 hover:bg-green-50" : "text-red-500 hover:bg-red-50"}`}
                                                     title={user.isBanned ? "Unban User" : "Ban User"}
                                                 >
                                                     {user.isBanned ? <CheckCircle className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
-                                                </Button>
+                                                </button>
                                             </form>
 
                                             <form action={deleteUser.bind(null, user.id)}>
-                                                <Button
+                                                <button
                                                     type="submit"
-                                                    variant="text"
-                                                    size="sm"
-                                                    color="danger"
-                                                    className="h-8 w-8 p-0 hover:bg-red-50 text-red-600"
+                                                    className="p-1.5 rounded-md text-red-600 hover:bg-red-50 transition-colors"
                                                     title="Delete User"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
-                                                </Button>
+                                                </button>
                                             </form>
                                         </div>
                                     </td>

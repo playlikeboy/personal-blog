@@ -35,8 +35,9 @@ export function AdminView({ posts }: { posts: Post[] }) {
 
     const handleFeaturedToggle = async (postId: string, currentState: boolean) => {
         startTransition(async () => {
-            const result = await toggleFeatured(postId, !currentState);
-            if (!result.success) {
+            try {
+                await toggleFeatured(postId, !currentState);
+            } catch (error) {
                 alert("Failed to update featured status");
             }
         });
@@ -44,8 +45,9 @@ export function AdminView({ posts }: { posts: Post[] }) {
 
     const handleStaffPickToggle = async (postId: string, currentState: boolean) => {
         startTransition(async () => {
-            const result = await toggleStaffPick(postId, !currentState);
-            if (!result.success) {
+            try {
+                await toggleStaffPick(postId, !currentState);
+            } catch (error) {
                 alert("Failed to update staff pick status");
             }
         });

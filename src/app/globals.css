@@ -3,49 +3,136 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@layer base {
-  :root {
-    --background: 255 255 255;
-    --foreground: 23 23 23;
-  }
-}
-
-body {
-  background-color: rgb(var(--background));
-  color: rgb(var(--foreground));
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
 :root {
-  --highlight: oklch(0.852 0.199 91.936);
-  --brand: oklch(0.623 0.214 259.815);
+  /* Light Mode - Minimalist White */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+
+  --primary: oklch(0.208 0.042 265.755);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-foreground: oklch(0.554 0.046 257.417);
+
+  --accent: oklch(0.968 0.007 247.896);
+  --accent-foreground: oklch(0.208 0.042 265.755);
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+
+  --border: oklch(0.929 0.013 255.508);
+  --input: oklch(0.929 0.013 255.508);
+  --ring: oklch(0.129 0.042 264.695);
+
+  --radius: 0.5rem;
 }
 
 .dark {
-  --highlight: oklch(0.852 0.199 91.936);
-  --brand: oklch(0.707 0.165 254.624);
+  /* Dark Mode - True Dark/Black */
+  --background: oklch(0 0 0);
+  /* Pure Black */
+  --foreground: oklch(0.984 0.003 247.858);
+
+  --card: oklch(0 0 0);
+  --card-foreground: oklch(0.984 0.003 247.858);
+
+  --popover: oklch(0 0 0);
+  --popover-foreground: oklch(0.984 0.003 247.858);
+
+  --primary: oklch(0.984 0.003 247.858);
+  --primary-foreground: oklch(0.208 0.042 265.755);
+
+  --secondary: oklch(0.129 0.042 264.695);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+
+  --muted: oklch(0.129 0.042 264.695);
+  --muted-foreground: oklch(0.637 0.042 254.624);
+
+  --accent: oklch(0.129 0.042 264.695);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+
+  --border: oklch(0.141 0.005 285.823);
+  --input: oklch(0.141 0.005 285.823);
+  --ring: oklch(0.869 0.022 252.894);
 }
 
-@theme inline {
-  --color-highlight: var(--highlight);
-  --color-brand: var(--brand);
+.reading {
+  /* Reading Mode - Warm Sepia/Paper */
+  --background: oklch(0.98 0.02 95);
+  /* Warm Cream */
+  --foreground: oklch(0.25 0.04 50);
+  /* Dark Brown/Charcoal */
+
+  --card: oklch(0.97 0.03 95);
+  --card-foreground: oklch(0.25 0.04 50);
+
+  --popover: oklch(0.98 0.02 95);
+  --popover-foreground: oklch(0.25 0.04 50);
+
+  --primary: oklch(0.35 0.08 50);
+  /* Deep Sepia */
+  --primary-foreground: oklch(0.98 0.02 95);
+
+  --secondary: oklch(0.94 0.04 95);
+  --secondary-foreground: oklch(0.35 0.08 50);
+
+  --muted: oklch(0.92 0.04 95);
+  --muted-foreground: oklch(0.55 0.05 50);
+
+  --accent: oklch(0.94 0.04 95);
+  --accent-foreground: oklch(0.35 0.08 50);
+
+  --destructive: oklch(0.6 0.15 25);
+  --destructive-foreground: oklch(0.98 0.02 95);
+
+  --border: oklch(0.88 0.05 95);
+  --input: oklch(0.88 0.05 95);
+  --ring: oklch(0.35 0.08 50);
 }
 
-/* @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-} */
-/* 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
-} */
+}

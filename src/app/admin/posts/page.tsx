@@ -2,8 +2,6 @@ import { db } from "@/db";
 import { posts, users } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { toggleStaffPick, deletePost } from "../actions";
-import { Button } from "rizzui";
-import { Badge } from "rizzui";
 import { Trash2, Star, SquarePen, Globe } from "lucide-react";
 import Link from "next/link";
 
@@ -65,52 +63,47 @@ export default async function AdminPostsPage() {
                                     <td className="px-6 py-4">
                                         <div className="flex gap-2">
                                             {post.published ? (
-                                                <Badge color="success" variant="flat">Published</Badge>
+                                                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Published</span>
                                             ) : (
-                                                <Badge color="warning" variant="flat">Draft</Badge>
+                                                <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Draft</span>
                                             )}
                                             {post.staffPick && (
-                                                <Badge color="info" variant="flat">Staff Pick</Badge>
+                                                <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">Staff Pick</span>
                                             )}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
                                             <form action={toggleStaffPick.bind(null, post.id, post.staffPick || false)}>
-                                                <Button
+                                                <button
                                                     type="submit"
-                                                    variant="text"
-                                                    size="sm"
-                                                    className={post.staffPick ? "text-yellow-500" : "text-gray-400 hover:text-yellow-500"}
+                                                    className={`p-1.5 rounded-md transition-colors ${post.staffPick ? "text-yellow-500 hover:bg-yellow-50" : "text-gray-400 hover:text-yellow-500 hover:bg-gray-50"}`}
                                                     title={post.staffPick ? "Remove Staff Pick" : "Make Staff Pick"}
                                                 >
                                                     <Star className={`w-4 h-4 ${post.staffPick ? 'fill-current' : ''}`} />
-                                                </Button>
+                                                </button>
                                             </form>
 
                                             <Link href={`/${post.slug}`} target="_blank">
-                                                <Button variant="text" size="sm" className="text-gray-500" title="View Live">
+                                                <button type="button" className="p-1.5 rounded-md text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors" title="View Live">
                                                     <Globe className="w-4 h-4" />
-                                                </Button>
+                                                </button>
                                             </Link>
 
                                             <Link href={`/write?id=${post.id}`}>
-                                                <Button variant="text" size="sm" className="text-blue-600" title="Edit">
+                                                <button type="button" className="p-1.5 rounded-md text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors" title="Edit">
                                                     <SquarePen className="w-4 h-4" />
-                                                </Button>
+                                                </button>
                                             </Link>
 
                                             <form action={deletePost.bind(null, post.id)}>
-                                                <Button
+                                                <button
                                                     type="submit"
-                                                    variant="text"
-                                                    size="sm"
-                                                    color="danger"
-                                                    className="text-red-500 hover:bg-red-50"
+                                                    className="p-1.5 rounded-md text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors"
                                                     title="Delete Post"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
-                                                </Button>
+                                                </button>
                                             </form>
                                         </div>
                                     </td>

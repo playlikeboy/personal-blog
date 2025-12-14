@@ -59,6 +59,15 @@ export async function deleteUser(userId: string) {
     revalidatePath("/admin/users");
 }
 
+
+export async function toggleFeatured(postId: string, currentStatus: boolean = false) {
+    await checkAdmin();
+    await db.update(posts)
+        .set({ featured: !currentStatus })
+        .where(eq(posts.id, postId));
+    revalidatePath("/admin/posts");
+}
+
 export async function toggleStaffPick(postId: string, currentStatus: boolean = false) {
     await checkAdmin();
     await db.update(posts)
