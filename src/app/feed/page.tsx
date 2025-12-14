@@ -2,12 +2,13 @@ import { db } from "@/db";
 import { posts } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { FeedView } from "@/components/blog/feed-view";
+import { mapDbPostToPost } from "@/lib/posts";
 
 export const dynamic = 'force-dynamic';
 
 export default async function FeedPage() {
     // Fetch real posts only
-    const allPosts = await db.query.posts.findMany({
+    const dbPosts = await db.query.posts.findMany({
         where: eq(posts.published, true),
         orderBy: [desc(posts.createdAt)],
         with: {
@@ -24,5 +25,7 @@ export default async function FeedPage() {
     // Assuming simple mapping is handled or types align locally.
     // For now, passing directly.
 
-    return <FeedView posts={allPosts as any[]} />;
+    const mappedPosts = dbPosts.map(mapDbPostToPost);
+
+    return <FeedView posts={mappedPosts} />;
 }

@@ -32,7 +32,28 @@ export async function GET(
             }
         });
 
-        return NextResponse.json({ user, posts: userPosts });
+        const mappedPosts = userPosts.map(p => ({
+            ...p,
+            tags: p.tags.map(t => t.tag.name),
+            id: p.id,
+            slug: p.slug,
+            title: p.title,
+            excerpt: p.excerpt || "",
+            coverImage: p.coverImage || "",
+            date: p.createdAt ? new Date(p.createdAt).toISOString() : new Date().toISOString(),
+            author: p.author || { name: "Unknown", avatar: "" },
+            authorId: p.authorId,
+            readTime: p.readTime || "5 min read",
+            content: p.content || "",
+            views: p.views || 0,
+            likesCount: p.likesCount || 0,
+            commentsCount: p.commentsCount || 0,
+            published: p.published || false,
+            createdAt: p.createdAt ? new Date(p.createdAt).toISOString() : new Date().toISOString(),
+            updatedAt: p.updatedAt ? new Date(p.updatedAt).toISOString() : new Date().toISOString(),
+        }));
+
+        return NextResponse.json({ user, posts: mappedPosts });
 
     } catch (error) {
         console.error("Error fetching user profile:", error);

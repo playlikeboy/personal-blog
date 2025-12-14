@@ -37,7 +37,7 @@ export default async function AuthorsPage() {
                         {authors.map((author) => (
                             <Link
                                 key={author.name}
-                                href={`/u/${author.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                href={`/@${author.username || author.name.toLowerCase().replace(/\s+/g, '-')}`}
                                 className="group flex flex-col items-center text-center space-y-4"
                             >
                                 <Avatar className="w-24 h-24 sm:w-32 sm:h-32 group-hover:scale-105 transition-transform duration-300 ring-offset-2 ring-1 ring-transparent group-hover:ring-gray-200">

@@ -20,8 +20,8 @@ export default async function Home() {
     // The previous manual mapping was good for sanitization but led to type mismatch if not careful.
     // Let's rely on the real standard Post type.
 
-    const featuredPost = posts[0];
-    const recentPosts = posts.slice(1, 4);
+    const featuredPost = posts.find(p => p.featured) || posts[0];
+    const recentPosts = posts.filter(p => p.id !== featuredPost?.id).slice(0, 3);
 
     return (
         <div className="flex min-h-screen flex-col bg-background">

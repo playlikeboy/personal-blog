@@ -1,7 +1,9 @@
 import { Post } from "@/db/types"; // Or wherever Post is defined
 
 export function getPostImage(post: { title: string; coverImage?: string | null; tags?: string[] | null }): string {
-    if (post.coverImage) return post.coverImage;
+    if (post.coverImage && (post.coverImage.startsWith('http') || post.coverImage.startsWith('/'))) {
+        return post.coverImage;
+    }
 
     // Fallback to Pollinations.ai
     const title = encodeURIComponent(post.title);

@@ -81,6 +81,7 @@ const jsonLd = {
 };
 
 import { Providers } from "./providers";
+import { InstallPrompt } from "@/components/pwa/install-prompt";
 
 export default function RootLayout({
 	children,
@@ -99,7 +100,10 @@ export default function RootLayout({
 							type="application/ld+json"
 							dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 						/>
-						<Providers>{children}</Providers>
+						<Providers>
+							{children}
+							<InstallPrompt />
+						</Providers>
 					</StackTheme>
 				</StackProvider>
 			</body>

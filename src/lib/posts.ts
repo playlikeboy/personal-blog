@@ -21,6 +21,7 @@ export interface Post {
     likesCount: number;
     commentsCount: number;
     published: boolean;
+    featured: boolean;
     createdAt: string;
     updatedAt: string;
 }
@@ -59,7 +60,7 @@ export async function getPostBySlug(slug: string): Promise<Post | undefined> {
     return mapDbPostToPost(dbPost);
 }
 
-function mapDbPostToPost(dbPost: any): Post {
+export function mapDbPostToPost(dbPost: any): Post {
     return {
         id: dbPost.id,
         slug: dbPost.slug,
@@ -79,6 +80,7 @@ function mapDbPostToPost(dbPost: any): Post {
         likesCount: dbPost.likesCount || 0,
         commentsCount: dbPost.commentsCount || 0,
         published: dbPost.published || false,
+        featured: dbPost.featured || false,
         createdAt: dbPost.createdAt ? new Date(dbPost.createdAt).toISOString() : new Date().toISOString(),
         updatedAt: dbPost.updatedAt ? new Date(dbPost.updatedAt).toISOString() : new Date().toISOString(),
     };
