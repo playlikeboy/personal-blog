@@ -18,6 +18,7 @@ export async function syncUserWithStack(stackUser: User) {
                 email: stackUser.primaryEmail || "",
                 name: stackUser.displayName || "Anonymous",
                 avatar: stackUser.profileImageUrl || "",
+                username: (stackUser.primaryEmail?.split('@')[0] || "user") + "-" + stackUser.id.slice(0, 4),
             });
         } else {
             // Optional: Update existing user if details changed

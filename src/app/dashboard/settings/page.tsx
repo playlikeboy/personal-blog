@@ -1,7 +1,5 @@
-export const dynamic = 'force-dynamic';
-
-import { redirect } from "next/navigation";
+import { DashboardSettingsView } from "@/components/dashboard/settings-view";
 
 export default function DashboardSettingsPage() {
-    redirect("/handler/account-settings");
+    return <DashboardSettingsView />;
 }

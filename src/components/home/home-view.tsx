@@ -8,6 +8,17 @@ import { useUser } from "@stackframe/stack";
 import { Post } from "@/lib/posts";
 import NextImage from "next/image";
 import { cn } from "@/lib/utils";
+import { getPostImage } from "@/lib/image-utils";
+
+const isValidImage = (url: string | null | undefined) => {
+    if (!url) return false;
+    try {
+        new URL(url);
+        return true;
+    } catch {
+        return url.startsWith('/');
+    }
+};
 
 interface HomeViewProps {
     posts: Post[];
@@ -79,18 +90,12 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
                                 <div className="lg:col-span-7 relative group cursor-pointer">
                                     <Link href={`/posts/${featuredPost.slug}`}>
                                         <div className="aspect-[16/10] overflow-hidden rounded-[2rem] bg-gray-100 dark:bg-gray-900 relative shadow-2xl shadow-gray-200/50 dark:shadow-none">
-                                            {featuredPost.coverImage ? (
-                                                <NextImage
-                                                    src={featuredPost.coverImage}
-                                                    alt={featuredPost.title}
-                                                    fill
-                                                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center bg-secondary/30 text-4xl font-serif text-muted-foreground/20 italic">
-                                                    Unstory
-                                                </div>
-                                            )}
+                                            <NextImage
+                                                src={getPostImage(featuredPost)}
+                                                alt={featuredPost.title}
+                                                fill
+                                                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                                            />
                                         </div>
                                     </Link>
                                 </div>
@@ -143,7 +148,7 @@ export function HomeView({ posts, featuredPost, recentPosts }: HomeViewProps) {
                             {recentPosts.map((post) => (
                                 <Link key={post.slug} href={`/posts/${post.slug}`} className="group flex flex-col space-y-6">
                                     <div className="aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-900 relative">
-                                        {post.coverImage ? (
+                                        {isValidImage(post.coverImage) ? (
                                             <NextImage
                                                 src={post.coverImage}
                                                 alt={post.title}
