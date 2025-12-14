@@ -94,3 +94,25 @@ export async function getFollowerStats(userId: string) {
         hidden: false
     };
 }
+
+export async function getFollowers(userId: string) {
+    const followerList = await db.select({
+        user: users
+    })
+        .from(follows)
+        .innerJoin(users, eq(follows.followerId, users.id))
+        .where(eq(follows.followingId, userId));
+
+    return followerList.map(f => f.user);
+}
+
+export async function getFollowing(userId: string) {
+    const followingList = await db.select({
+        user: users
+    })
+        .from(follows)
+        .innerJoin(users, eq(follows.followingId, users.id))
+        .where(eq(follows.followerId, userId));
+
+    return followingList.map(f => f.user);
+}

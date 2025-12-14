@@ -11,6 +11,8 @@ import { useEffect, useState, useTransition } from "react";
 import { toggleFollow, getFollowStatus, getFollowerStats } from "@/app/actions/user";
 import { ArrowUpTrayIcon, CheckIcon, UserPlusIcon, UserMinusIcon } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
+import { FollowsModal } from "./follows-modal";
+import { getFollowers, getFollowing } from "@/app/actions/user";
 
 interface UserProfileViewProps {
     username: string;
@@ -26,6 +28,11 @@ export function UserProfileView({ username }: UserProfileViewProps) {
     const [isSelf, setIsSelf] = useState(false);
     const [stats, setStats] = useState<{ followers: number; following: number; hidden: boolean } | null>(null);
     const [isPending, startTransition] = useTransition();
+
+    // Modal State
+    const [activeModal, setActiveModal] = useState<'followers' | 'following' | null>(null);
+    const [modalData, setModalData] = useState<User[]>([]);
+    const [modalLoading, setModalLoading] = useState(false);
 
     useEffect(() => {
         if (!username) return;
@@ -105,6 +112,25 @@ export function UserProfileView({ username }: UserProfileViewProps) {
         }
     };
 
+    const handleOpenModal = (type: 'followers' | 'following') => {
+        if (!data?.user?.id) return;
+
+        setActiveModal(type);
+        setModalLoading(true);
+        setModalData([]);
+
+        const fetchFn = type === 'followers' ? getFollowers : getFollowing;
+
+        fetchFn(data.user.id)
+            .then((users) => {
+                setModalData(users as User[]); // Cast to User[] as actions return correct shape
+                setModalLoading(false);
+            })
+            .catch(() => {
+                setModalLoading(false);
+            });
+    };
+
     if (loading) {
         return (
             <div className="flex min-h-screen flex-col bg-background font-sans">
@@ -159,14 +185,20 @@ export function UserProfileView({ username }: UserProfileViewProps) {
                             {/* Stats */}
                             {stats && !stats.hidden && (
                                 <div className="flex justify-center gap-6 text-sm">
-                                    <div className="flex flex-col">
-                                        <span className="font-bold text-foreground">{stats.followers}</span>
-                                        <span className="text-muted-foreground">Followers</span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="font-bold text-foreground">{stats.following}</span>
-                                        <span className="text-muted-foreground">Following</span>
-                                    </div>
+                                    <button
+                                        onClick={() => handleOpenModal('followers')}
+                                        className="flex flex-col hover:opacity-70 transition-opacity cursor-pointer text-center"
+                                    >
+                                        <span className="font-bold text-foreground text-lg">{stats.followers}</span>
+                                        <span className="text-muted-foreground text-xs uppercase tracking-wide">Followers</span>
+                                    </button>
+                                    <button
+                                        onClick={() => handleOpenModal('following')}
+                                        className="flex flex-col hover:opacity-70 transition-opacity cursor-pointer text-center"
+                                    >
+                                        <span className="font-bold text-foreground text-lg">{stats.following}</span>
+                                        <span className="text-muted-foreground text-xs uppercase tracking-wide">Following</span>
+                                    </button>
                                 </div>
                             )}
 
@@ -238,6 +270,15 @@ export function UserProfileView({ username }: UserProfileViewProps) {
                 </Container>
             </main>
             <Footer />
+            <Footer />
+
+            <FollowsModal
+                isOpen={!!activeModal}
+                onClose={() => setActiveModal(null)}
+                title={activeModal || ""}
+                users={modalData}
+                loading={modalLoading}
+            />
         </div>
     );
 }

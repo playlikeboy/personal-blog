@@ -1,7 +1,11 @@
 export default function Loading() {
 	return (
 		<div className="flex items-center justify-center min-h-[50vh] w-full">
-			<div className="w-16 h-16 border-4 border-gray-100 border-t-black rounded-full animate-spin" />
+			<div className="flex space-x-2">
+				<div className="w-2 h-2 bg-foreground rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+				<div className="w-2 h-2 bg-foreground rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+				<div className="w-2 h-2 bg-foreground rounded-full animate-bounce"></div>
+			</div>
 		</div>
 	);
 }
