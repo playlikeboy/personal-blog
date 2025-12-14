@@ -1,5 +1,5 @@
 import { getDashboardStats } from "./actions";
-import { Text, Title } from "rizzui";
+import { StatsCard } from "@/components/admin/stats-card";
 import { FileText, Users, Eye, Mail } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -37,26 +37,13 @@ export default async function AdminDashboardPage() {
             </div>
 
             <div className="bg-white p-6 rounded-xl border">
-                <Title as="h3" className="mb-4">Quick Actions</Title>
+                <h3 className="text-lg font-bold font-serif mb-4">Quick Actions</h3>
                 <div className="flex gap-4">
                     {/* Placeholder for Quick Actions */}
-                    <Text>Select a section from the sidebar to manage content.</Text>
+                    <p className="text-gray-500">Select a section from the sidebar to manage content.</p>
                 </div>
             </div>
         </div>
     );
 }
 
-function StatsCard({ title, value, icon: Icon, color }: { title: string, value: number, icon: any, color: string }) {
-    return (
-        <div className="bg-white p-6 rounded-xl border flex items-center justify-between">
-            <div>
-                <Text className="text-gray-500 font-medium mb-1">{title}</Text>
-                <Title as="h2" className="text-3xl font-bold">{value}</Title>
-            </div>
-            <div className={`p-4 rounded-full ${color}`}>
-                <Icon className="w-6 h-6" />
-            </div>
-        </div>
-    );
-}

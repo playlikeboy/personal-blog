@@ -61,46 +61,13 @@ export async function toggleStaffPick(postId: string, isStaffPick: boolean) {
     try {
         await verifyAdmin();
 
-        // 1. Get or create "Staff Pick" tag
-        const staffPickSlug = "staff-pick";
-        let staffPickTag = await db.query.tags.findFirst({
-            where: eq(tags.slug, staffPickSlug)
-        });
-
-        if (!staffPickTag) {
-            const [newTag] = await db.insert(tags).values({
-                name: "Staff Pick",
-                slug: staffPickSlug,
-            }).returning();
-            staffPickTag = newTag;
-        }
-
-        if (isStaffPick) {
-            // Add tag if not exists
-            const existingLink = await db.query.postsToTags.findFirst({
-                where: and(
-                    eq(postsToTags.postId, postId),
-                    eq(postsToTags.tagId, staffPickTag.id)
-                )
-            });
-
-            if (!existingLink) {
-                await db.insert(postsToTags).values({
-                    postId,
-                    tagId: staffPickTag.id
-                });
-            }
-        } else {
-            // Remove tag
-            await db.delete(postsToTags)
-                .where(and(
-                    eq(postsToTags.postId, postId),
-                    eq(postsToTags.tagId, staffPickTag.id)
-                ));
-        }
+        await db.update(posts)
+            .set({ staffPick: isStaffPick })
+            .where(eq(posts.id, postId));
 
         revalidatePath("/admin");
         revalidatePath("/");
+        revalidatePath("/tags/[slug]"); // Revalidate dynamic tag pages
         return { success: true };
     } catch (error) {
         console.error("Failed to toggle staff pick", error);

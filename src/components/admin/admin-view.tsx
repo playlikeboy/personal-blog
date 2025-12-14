@@ -8,12 +8,14 @@ import { Switch, Badge, Text, Button } from "rizzui";
 import { useRouter } from "next/navigation";
 
 // Define the type based on the query result
+// Define the type based on the query result
 type Post = {
     id: string;
     title: string;
     slug: string;
     createdAt: Date | null;
     featured: boolean | null;
+    staffPick: boolean | null;
     author: {
         name: string | null;
         email: string;
@@ -40,9 +42,9 @@ export function AdminView({ posts }: { posts: Post[] }) {
         });
     };
 
-    const handleStaffPickToggle = async (postId: string, hasStaffPick: boolean) => {
+    const handleStaffPickToggle = async (postId: string, currentState: boolean) => {
         startTransition(async () => {
-            const result = await toggleStaffPick(postId, !hasStaffPick);
+            const result = await toggleStaffPick(postId, !currentState);
             if (!result.success) {
                 alert("Failed to update staff pick status");
             }
@@ -77,8 +79,6 @@ export function AdminView({ posts }: { posts: Post[] }) {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {posts.map((post) => {
-                            const hasStaffPick = post.tags.some(t => t.tag.slug === "staff-pick");
-
                             return (
                                 <tr key={post.id} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap">
@@ -118,8 +118,8 @@ export function AdminView({ posts }: { posts: Post[] }) {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <Switch
-                                            checked={hasStaffPick}
-                                            onChange={() => handleStaffPickToggle(post.id, hasStaffPick)}
+                                            checked={!!post.staffPick}
+                                            onChange={() => handleStaffPickToggle(post.id, !!post.staffPick)}
                                             disabled={isPending}
                                             className="cursor-pointer"
                                             color="info" // Use a different color if possible

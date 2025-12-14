@@ -107,6 +107,7 @@ export const posts = sqliteTable("posts", {
     coverImage: text("cover_image"),
     published: integer("published", { mode: "boolean" }).default(false),
     featured: integer("featured", { mode: "boolean" }).default(false),
+    staffPick: integer("staff_pick", { mode: "boolean" }).default(false),
     authorId: text("author_id").notNull().references(() => users.id),
     readTime: text("read_time"),
     views: integer("views").default(0),
