@@ -1,5 +1,3 @@
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { getAllPosts } from "@/lib/posts";
 import { stackServerApp } from "@/stack/server";
 import { syncUserWithStack } from "@/lib/auth-sync";
@@ -24,15 +22,11 @@ export default async function Home() {
     const recentPosts = posts.filter(p => p.id !== featuredPost?.id).slice(0, 3);
 
     return (
-        <div className="flex min-h-screen flex-col bg-background">
-            <Header />
-            <HomeView
-                posts={posts}
-                featuredPost={featuredPost}
-                recentPosts={recentPosts}
-            />
-            <Footer />
-        </div>
+        <HomeView
+            posts={posts}
+            featuredPost={featuredPost}
+            recentPosts={recentPosts}
+        />
     );
 }
 

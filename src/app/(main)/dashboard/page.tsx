@@ -4,8 +4,6 @@ import { DashboardView } from "@/components/dashboard/dashboard-view";
 import { Loader, Text } from "rizzui";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -37,22 +35,16 @@ export default function DashboardPage() {
 
     if (loading) {
         return (
-            <div className="flex min-h-screen flex-col bg-background font-sans">
-                <Header />
-                <main className="flex-1 flex items-center justify-center">
-                    <Loader variant="spinner" size="lg" />
-                </main>
+            <div className="flex-1 flex items-center justify-center min-h-[50vh]">
+                <Loader variant="spinner" size="lg" />
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="flex min-h-screen flex-col bg-background font-sans">
-                <Header />
-                <main className="flex-1 flex items-center justify-center text-red-500">
-                    <Text>{error}</Text>
-                </main>
+            <div className="flex-1 flex items-center justify-center text-red-500 min-h-[50vh]">
+                <Text>{error}</Text>
             </div>
         );
     }

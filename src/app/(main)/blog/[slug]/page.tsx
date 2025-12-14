@@ -4,8 +4,6 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Container } from "@/components/ui/container";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { getPostBySlug } from "@/lib/posts";
 // ArrowLeftIcon removed (unused)
 import { ScrollProgress } from "@/components/blog/scroll-progress";
@@ -27,10 +25,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     return (
         <div className="min-h-screen bg-background">
             <ScrollProgress />
-            <Header />
-            <main className="py-12 md:py-20">
+            <div className="py-12 md:py-20">
                 <Container as="article" className="max-w-3xl">
-                    
+
                     {/* Header */}
                     <header className="mb-10 space-y-6">
                         <div className="flex gap-2 mb-4">
@@ -77,8 +74,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     </div>
 
                 </Container>
-            </main>
-            <Footer />
+            </div>
         </div>
     );
 }

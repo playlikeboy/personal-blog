@@ -1,6 +1,4 @@
 import { Container } from "@/components/ui/container";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { PostCard } from "@/components/blog/post-card";
 import { db } from "@/db";
 import { posts, tags, postsToTags } from "@/db/schema";
@@ -57,17 +55,13 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
 
     if (!tagRecord) {
         return (
-            <div className="flex min-h-screen flex-col bg-background font-sans">
-                <Header />
-                <main className="flex-1 py-12 md:py-20">
-                    <Container>
-                        <div className="py-20 text-center bg-gray-50 rounded-2xl">
-                            <h1 className="text-2xl font-bold mb-2">Tag Not Found</h1>
-                            <p className="text-gray-500">We couldn&apos;t find a tag named &quot;{decodedTag}&quot;.</p>
-                        </div>
-                    </Container>
-                </main>
-                <Footer />
+            <div className="py-12 md:py-20">
+                <Container>
+                    <div className="py-20 text-center bg-gray-50 rounded-2xl">
+                        <h1 className="text-2xl font-bold mb-2">Tag Not Found</h1>
+                        <p className="text-gray-500">We couldn&apos;t find a tag named &quot;{decodedTag}&quot;.</p>
+                    </div>
+                </Container>
             </div>
         );
     }
@@ -131,48 +125,44 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
     const totalPages = Math.ceil(totalCount / limit);
 
     return (
-        <div className="flex min-h-screen flex-col bg-background font-sans">
-            <Header />
-            <main className="flex-1 py-12 md:py-20">
-                <Container>
-                    <div className="mb-8">
-                        <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Tag</p>
-                        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl border-b border-gray-100 pb-8 mb-8">
-                            #{tagRecord.name}
-                        </h1>
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <p className="text-gray-500">
-                                {totalCount} {totalCount === 1 ? 'post' : 'posts'} found
-                            </p>
-                            <div className="w-full md:w-auto">
-                                <TagFilter />
-                            </div>
+        <div className="py-12 md:py-20">
+            <Container>
+                <div className="mb-8">
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Tag</p>
+                    <h1 className="text-4xl font-bold tracking-tight sm:text-5xl border-b border-gray-100 pb-8 mb-8">
+                        #{tagRecord.name}
+                    </h1>
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <p className="text-gray-500">
+                            {totalCount} {totalCount === 1 ? 'post' : 'posts'} found
+                        </p>
+                        <div className="w-full md:w-auto">
+                            <TagFilter />
                         </div>
                     </div>
+                </div>
 
-                    {mappedPosts.length > 0 ? (
-                        <>
-                            <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-                                {mappedPosts.map((post) => (
-                                    <PostCard key={post.slug} post={post} />
-                                ))}
-                            </div>
-
-                            {/* Pagination */}
-                            <PaginationControl
-                                currentPage={pageNum}
-                                totalPages={totalPages}
-                                queryParams={{ sort }}
-                            />
-                        </>
-                    ) : (
-                        <div className="py-20 text-center bg-gray-50 rounded-2xl">
-                            <p className="text-gray-500">No posts found with this tag.</p>
+                {mappedPosts.length > 0 ? (
+                    <>
+                        <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+                            {mappedPosts.map((post) => (
+                                <PostCard key={post.slug} post={post} />
+                            ))}
                         </div>
-                    )}
-                </Container>
-            </main>
-            <Footer />
+
+                        {/* Pagination */}
+                        <PaginationControl
+                            currentPage={pageNum}
+                            totalPages={totalPages}
+                            queryParams={{ sort }}
+                        />
+                    </>
+                ) : (
+                    <div className="py-20 text-center bg-gray-50 rounded-2xl">
+                        <p className="text-gray-500">No posts found with this tag.</p>
+                    </div>
+                )}
+            </Container>
         </div>
     );
 }
