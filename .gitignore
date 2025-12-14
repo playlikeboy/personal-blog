@@ -43,3 +43,7 @@ next-env.d.ts
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+sw.js
+sw.js.map
+workbox-*.js

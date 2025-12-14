@@ -5,6 +5,12 @@ import { text, integer, sqliteTable, index, primaryKey } from "drizzle-orm/sqlit
 // Users
 // ----------------------------------------------------------------------
 
+// ... existing imports ...
+
+// ----------------------------------------------------------------------
+// Users
+// ----------------------------------------------------------------------
+
 export const users = sqliteTable("users", {
     id: text("id").primaryKey(), // Stack Auth ID
     email: text("email").unique().notNull(),
@@ -15,6 +21,7 @@ export const users = sqliteTable("users", {
     twitter: text("twitter"),
     github: text("github"),
     website: text("website"),
+    showFollowersCount: integer("show_followers_count", { mode: "boolean" }).default(false),
     createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(strftime('%s', 'now'))`),
 });
 
@@ -23,7 +30,42 @@ export const usersRelations = relations(users, ({ many }) => ({
     comments: many(comments),
     likes: many(likes),
     bookmarks: many(bookmarks),
+    followers: many(follows, { relationName: "following" }),
+    following: many(follows, { relationName: "follower" }),
 }));
+
+// ... existing tables ...
+
+// ----------------------------------------------------------------------
+// Engagement
+// ----------------------------------------------------------------------
+
+// ... existing comments, likes, bookmarks tables ...
+
+export const follows = sqliteTable("follows", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    followerId: text("follower_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
+    followingId: text("following_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(strftime('%s', 'now'))`),
+}, (table) => ({
+    uniqueFollow: index("unique_follow").on(table.followerId, table.followingId),
+}));
+
+export const followsRelations = relations(follows, ({ one }) => ({
+    follower: one(users, {
+        fields: [follows.followerId],
+        references: [users.id],
+        relationName: "follower",
+    }),
+    following: one(users, {
+        fields: [follows.followingId],
+        references: [users.id],
+        relationName: "following",
+    }),
+}));
+
+// ... existing newsletterSubscribers and analytics tables ...
+
 
 // ----------------------------------------------------------------------
 // Categories & Tags

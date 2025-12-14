@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Heart, Eye } from "lucide-react";
 import { Button } from "rizzui";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -125,7 +126,9 @@ export function PostView({ post }: PostViewProps) {
                             {post.title}
                         </Title>
                         <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-                            <span>{post.author?.name || "Author"}</span>
+                            <Link href={`/@${post.author?.name ? post.author.name.replace(/\s+/g, '-').toLowerCase() : post.authorId}`} className="hover:text-foreground transition-colors font-medium">
+                                {post.author?.name || "Author"}
+                            </Link>
                             <span>•</span>
                             <span>{new Date(post.date).toLocaleDateString()}</span>
                             <span>•</span>

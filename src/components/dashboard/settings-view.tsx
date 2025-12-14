@@ -1,11 +1,10 @@
-"use client";
-
 import { useUser } from "@stackframe/stack";
 import { useState, useEffect } from "react";
-import { Button, Input, Title, Text, Loader, Textarea } from "rizzui";
+import { Button, Input, Title, Text, Loader, Textarea, Switch } from "rizzui";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { Header } from "@/components/layout/header";
 import { Container } from "@/components/ui/container";
+import { updateUserSettings } from "@/app/actions/user";
 
 export function DashboardSettingsView() {
     const user = useUser();
@@ -18,6 +17,7 @@ export function DashboardSettingsView() {
     const [username, setUsername] = useState("");
     const [bio, setBio] = useState("");
     const [website, setWebsite] = useState("");
+    const [showFollowersCount, setShowFollowersCount] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -29,6 +29,7 @@ export function DashboardSettingsView() {
                     setUsername(u.username || "");
                     setBio(u.bio || "");
                     setWebsite(u.website || "");
+                    setShowFollowersCount(u.showFollowersCount || false);
                     setLoading(false);
                 })
                 .catch(err => {
@@ -37,6 +38,17 @@ export function DashboardSettingsView() {
                 });
         }
     }, [user]);
+
+    const handlePrivacyToggle = async () => {
+        const newValue = !showFollowersCount;
+        setShowFollowersCount(newValue); // Optimistic
+        try {
+            await updateUserSettings({ showFollowersCount: newValue });
+        } catch (e) {
+            setShowFollowersCount(!newValue); // Revert
+            // Optionally show toast
+        }
+    };
 
     const handleSave = async () => {
         setSaving(true);
@@ -90,6 +102,22 @@ export function DashboardSettingsView() {
                             onChange={(e) => setWebsite(e.target.value)}
                             placeholder="https://..."
                         />
+
+                        <div className="pt-4 border-t border-gray-100">
+                            <Title as="h6" className="mb-4">Privacy</Title>
+                            <div className="flex flex-col gap-1">
+                                <Switch
+                                    label="Show Follower Counts on Profile"
+                                    checked={showFollowersCount}
+                                    onChange={handlePrivacyToggle}
+                                    disabled={saving}
+                                    className="col-span-1"
+                                />
+                                <Text className="text-sm text-gray-500 pl-1">
+                                    When disabled, your follower and following counts will be hidden from everyone.
+                                </Text>
+                            </div>
+                        </div>
 
                         {message && (
                             <div className={`p-4 rounded-lg flex items-center gap-2 ${message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>

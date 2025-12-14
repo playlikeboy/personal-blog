@@ -4,10 +4,13 @@ import { Container } from "@/components/ui/container";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { PostCard } from "@/components/blog/post-card";
-import { Title, Text, Loader } from "rizzui";
+import { Title, Text, Loader, Button, ActionIcon, Tooltip } from "rizzui";
 import Image from "next/image";
 import { User, Post } from "@/db/types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { toggleFollow, getFollowStatus, getFollowerStats } from "@/app/actions/user";
+import { ArrowUpTrayIcon, CheckIcon, UserPlusIcon, UserMinusIcon } from "@heroicons/react/24/outline";
+import { cn } from "@/lib/utils";
 
 interface UserProfileViewProps {
     username: string;
@@ -18,22 +21,89 @@ export function UserProfileView({ username }: UserProfileViewProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
+    // Follow State
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [isSelf, setIsSelf] = useState(false);
+    const [stats, setStats] = useState<{ followers: number; following: number; hidden: boolean } | null>(null);
+    const [isPending, startTransition] = useTransition();
+
     useEffect(() => {
         if (!username) return;
+
+        // Fetch User Data
         fetch(`/api/u/${username}`)
             .then(res => {
                 if (!res.ok) throw new Error("Failed");
                 return res.json();
             })
-            .then(data => {
-                setData(data as { user: User; posts: Post[] });
+            .then(userData => {
+                setData(userData as { user: User; posts: Post[] });
                 setLoading(false);
+
+                // If user loaded, fetch follow status & stats
+                if (userData?.user?.id) {
+                    getFollowStatus(userData.user.id).then(status => {
+                        setIsFollowing(status.isFollowing);
+                        setIsSelf(status.isSelf);
+                    });
+
+                    getFollowerStats(userData.user.id).then(setStats);
+                }
             })
             .catch(() => {
                 setError(true);
                 setLoading(false);
             });
     }, [username]);
+
+    const handleFollow = () => {
+        if (!data?.user?.id || isSelf) return;
+
+        startTransition(async () => {
+            // Optimistic update
+            const prev = isFollowing;
+            setIsFollowing(!prev);
+
+            if (stats && !stats.hidden) {
+                setStats(prevStats => prevStats ? ({
+                    ...prevStats,
+                    followers: prev ? prevStats.followers - 1 : prevStats.followers + 1
+                }) : null);
+            }
+
+            try {
+                const result = await toggleFollow(data.user.id);
+                setIsFollowing(result.isFollowing);
+            } catch (error) {
+                // Revert
+                setIsFollowing(prev);
+                alert("Failed to update follow status. Please sign in.");
+            }
+        });
+    };
+
+    const handleShare = async () => {
+        const shareData = {
+            title: `${data?.user?.name || username} on Unstory`,
+            text: `Check out ${data?.user?.name}'s profile on Unstory.`,
+            url: window.location.href,
+        };
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (err) {
+                console.log("Share cancelled");
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                alert("Profile link copied to clipboard!");
+            } catch (err) {
+                console.error("Failed to copy", err);
+            }
+        }
+    };
 
     if (loading) {
         return (
@@ -80,17 +150,69 @@ export function UserProfileView({ username }: UserProfileViewProps) {
                             )}
                         </div>
 
-                        <div className="space-y-4 max-w-lg">
+                        <div className="space-y-4 max-w-lg w-full">
                             <Title as="h1" className="text-4xl md:text-5xl font-serif font-medium text-foreground">
                                 {user.name}
                             </Title>
                             <div className="text-muted-foreground">@{user.username}</div>
+
+                            {/* Stats */}
+                            {stats && !stats.hidden && (
+                                <div className="flex justify-center gap-6 text-sm">
+                                    <div className="flex flex-col">
+                                        <span className="font-bold text-foreground">{stats.followers}</span>
+                                        <span className="text-muted-foreground">Followers</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="font-bold text-foreground">{stats.following}</span>
+                                        <span className="text-muted-foreground">Following</span>
+                                    </div>
+                                </div>
+                            )}
+
                             {user.bio && (
                                 <Text className="text-lg text-muted-foreground font-light leading-relaxed">
                                     {user.bio}
                                 </Text>
                             )}
-                            <div className="inline-flex items-center gap-4 text-sm text-gray-400 font-medium pt-2">
+
+                            {/* Actions */}
+                            <div className="flex items-center justify-center gap-3 pt-4">
+                                {!isSelf && (
+                                    <Button
+                                        rounded="pill"
+                                        variant={isFollowing ? "outline" : "solid"}
+                                        className={cn("px-6", isFollowing ? "border-gray-200" : "")}
+                                        onClick={handleFollow}
+                                        isLoading={isPending}
+                                    >
+                                        {isFollowing ? (
+                                            <>
+                                                <UserMinusIcon className="w-4 h-4 mr-2" />
+                                                Following
+                                            </>
+                                        ) : (
+                                            <>
+                                                <UserPlusIcon className="w-4 h-4 mr-2" />
+                                                Follow
+                                            </>
+                                        )}
+                                    </Button>
+                                )}
+
+                                <Tooltip content="Share Profile" placement="top">
+                                    <ActionIcon
+                                        rounded="full"
+                                        variant="outline"
+                                        className="border-gray-200"
+                                        onClick={handleShare}
+                                    >
+                                        <ArrowUpTrayIcon className="w-5 h-5" />
+                                    </ActionIcon>
+                                </Tooltip>
+                            </div>
+
+                            <div className="inline-flex items-center gap-4 text-sm text-gray-400 font-medium pt-4">
                                 <span>{posts.length} Stories</span>
                                 <span>•</span>
                                 <span>Joined {user.createdAt ? new Date(user.createdAt).getFullYear() : '2024'}</span>
