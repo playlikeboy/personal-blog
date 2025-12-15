@@ -85,5 +85,5 @@ export async function GET(req: Request) {
     // Reuse existing logic from lib/posts
     const { posts, totalCount } = await searchPosts(q, page, limit);
 
-    return NextResponse.json(posts);
+    return NextResponse.json({ posts, totalCount });
 }

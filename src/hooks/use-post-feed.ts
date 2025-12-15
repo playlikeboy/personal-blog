@@ -27,11 +27,11 @@ export function usePostFeed({ initialPosts, limit = 12 }: UsePostFeedProps = {})
         revalidateFirstPage: false, // Don't refetch page 1 immediately if we have initial data
     });
 
-    const posts = data ? data.flat() : [];
+    const posts = data ? data.flatMap((page: any) => page.posts) : [];
     const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
-    const isEmpty = (data?.[0] as any[])?.length === 0;
-    // Type assertion for SWR data array which is array of arrays
-    const isReachingEnd = isEmpty || (data && (data[data.length - 1] as any[])?.length < limit);
+    const isEmpty = (data?.[0] as any)?.posts?.length === 0;
+    // Type assertion for SWR data array which is array of page objects
+    const isReachingEnd = isEmpty || (data && (data[data.length - 1] as any)?.posts?.length < limit);
 
     return {
         posts,

@@ -18,18 +18,25 @@ interface SearchPageViewProps {
     totalPages: number;
 }
 
-export function SearchPageView({ posts: initialPosts, initialQuery = "", currentPage, totalPages }: SearchPageViewProps) {
+export function SearchPageView({ posts: initialPosts, initialQuery = "", currentPage: initialPage = 1, totalPages: initialTotalPages }: SearchPageViewProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const pageParam = parseInt(searchParams.get("page") || "1", 10);
     const [inputValue, setInputValue] = useState(initialQuery);
     const [debouncedQuery] = useDebounce(inputValue, 300);
 
-    // Fetch on client side when query changes
-    const { posts: searchResults, isLoading } = useSearchPosts(debouncedQuery);
+    // Fetch on client side when query changes or page changes
+    const { posts: searchResults, totalCount, isLoading } = useSearchPosts({
+        query: debouncedQuery,
+        page: pageParam,
+        limit: 12
+    });
 
     // Use initial posts if query matches initialQuery and we are loading or have no data yet
-    // But simpler: just use searchResults if query is present, otherwise initial
     const displayPosts = debouncedQuery ? searchResults : (debouncedQuery === initialQuery ? initialPosts : []);
+
+    // Calculate total pages
+    const totalPages = debouncedQuery ? Math.ceil(totalCount / 12) : initialTotalPages;
 
     // Update URL silently without full reload
     useEffect(() => {
@@ -39,11 +46,21 @@ export function SearchPageView({ posts: initialPosts, initialQuery = "", current
         } else {
             params.delete("q");
         }
-        params.delete("page"); // Reset page on new search
+
+        // Only reset page if query actually changed (simplification: strict check)
+        // Actually, if dependency [debouncedQuery] changes, we might want to reset page to 1 IF it's a new search term.
+        // But useEffect runs on mount too.
+        // Logic: if query in URL != debouncedQuery, reset page.
+        // But here we rely on the user typing.
+        // Let's just update Q. The page change is handled by PaginationControl linking.
+        // However, if user types new query, we should probably reset page to 1.
+        if (debouncedQuery !== searchParams.get("q")) {
+            params.set("page", "1");
+        }
 
         // Shallow push to update URL
         router.push(`/search?${params.toString()}`);
-    }, [debouncedQuery, router, searchParams]);
+    }, [debouncedQuery, router, searchParams]); // Warning: searchParams dependency might cause loops if not careful.
 
 
     const handleSearch = (term: string) => {
@@ -77,7 +94,9 @@ export function SearchPageView({ posts: initialPosts, initialQuery = "", current
                     <Text className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
                         {debouncedQuery ? `Results for "${debouncedQuery}"` : "Recent Posts"}
                     </Text>
-                    {/* Simplified pagination info or removed for infinite scroll future */}
+                    <Text className="text-sm font-medium text-muted-foreground">
+                        {totalCount > 0 && `${totalCount} posts found`}
+                    </Text>
                 </div>
 
                 {displayPosts.length === 0 && !isLoading ? (
@@ -111,6 +130,16 @@ export function SearchPageView({ posts: initialPosts, initialQuery = "", current
                                 ))}
                             </AnimatePresence>
                         </div>
+
+                        {/* Pagination */}
+                        {debouncedQuery && totalPages > 1 && (
+                            <PaginationControl
+                                currentPage={pageParam}
+                                totalPages={totalPages}
+                                baseUrl="/search"
+                                queryParams={{ q: debouncedQuery }}
+                            />
+                        )}
                     </>
                 )}
             </div>
