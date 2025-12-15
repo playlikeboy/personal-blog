@@ -6,17 +6,32 @@ import type { Value } from 'platejs';
 
 import { BasicNodesKit } from '@/components/editor/plugins/basic-nodes-kit';
 import { Editor, EditorContainer } from '@/components/ui/editor';
+import { cn } from "@/lib/utils";
 
-export function PlateEditor({ initialValue, onChange }: { initialValue?: Value; onChange?: (value: Value) => void }) {
+export function PlateEditor({
+  initialValue,
+  onChange,
+  readOnly = false
+}: {
+  initialValue?: Value;
+  onChange?: (value: Value) => void;
+  readOnly?: boolean;
+}) {
   const editor = usePlateEditor({
     plugins: BasicNodesKit,
     value: initialValue || defaultValue,
+    readOnly,
   });
 
   return (
     <Plate editor={editor} onValueChange={({ value }) => onChange?.(value)}>
       <EditorContainer>
-        <Editor variant="none" placeholder="Tell your story..." className="min-h-[500px] text-lg focus:outline-none" />
+        <Editor
+          variant="none"
+          placeholder={readOnly ? "" : "Tell your story..."}
+          className={cn("text-lg focus:outline-none", !readOnly && "min-h-[500px]")}
+          readOnly={readOnly}
+        />
       </EditorContainer>
     </Plate>
   );

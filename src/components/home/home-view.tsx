@@ -66,7 +66,7 @@ export function HomeView({ topAuthorPosts, featuredPost, recentPosts }: HomeView
                                     Start Writing — Free
                                 </Button>
                             </Link>
-                            <Link href="/search" className="group flex items-center gap-2 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-3">
+                            <Link href="/feed" className="group flex items-center gap-2 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-3">
                                 <span>Explore Stories</span>
                                 <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                             </Link>
