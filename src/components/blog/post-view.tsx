@@ -11,61 +11,13 @@ import { Footer } from "@/components/layout/footer";
 import { Container } from "@/components/ui/container";
 import { Title } from "rizzui";
 import { Post } from "@/lib/posts";
-import ReactMarkdown from "react-markdown";
+import { PlateView } from "@/components/editor/plate-view";
+
+import useSWR from "swr";
 
 interface PostViewProps {
     post: Post | null;
 }
-
-// Basic Plate JSON Renderer
-const PlateRenderer = ({ content }: { content: string }) => {
-    try {
-        const nodes = JSON.parse(content);
-        if (!Array.isArray(nodes)) throw new Error("Invalid content");
-
-        return (
-            <div className="space-y-4">
-                {nodes.map((node: any, i: number) => (
-                    <PlateNode key={i} node={node} />
-                ))}
-            </div>
-        );
-    } catch (e) {
-        // Fallback to Markdown if not JSON (legacy support)
-        return <ReactMarkdown>{content}</ReactMarkdown>;
-    }
-};
-
-const PlateNode = ({ node }: { node: any }) => {
-    const children = node.children?.map((child: any, i: number) => {
-        if (child.text !== undefined) {
-            let text = <span key={i}>{child.text}</span>;
-            if (child.bold) text = <strong key={i}>{child.text}</strong>;
-            if (child.italic) text = <em key={i}>{child.text}</em>;
-            if (child.underline) text = <u key={i}>{child.text}</u>;
-            if (child.strikethrough) text = <s key={i}>{child.text}</s>;
-            return text;
-        }
-        return <PlateNode key={i} node={child} />;
-    });
-
-    switch (node.type) {
-        // Downshift headings to avoid conflict with main Page Title
-        case "h1": return <h2 className="text-3xl font-bold mt-8 mb-4">{children}</h2>;
-        case "h2": return <h3 className="text-2xl font-bold mt-6 mb-3">{children}</h3>;
-        case "h3": return <h4 className="text-xl font-bold mt-4 mb-2">{children}</h4>;
-        case "blockquote": return <blockquote className="border-l-4 border-gray-200 pl-4 italic my-6 text-gray-600 font-serif text-lg">{children}</blockquote>;
-        case "ul": return <ul className="list-disc list-outside ml-6 my-4 space-y-2">{children}</ul>;
-        case "ol": return <ol className="list-decimal list-outside ml-6 my-4 space-y-2">{children}</ol>;
-        case "li": return <li className="pl-1">{children}</li>;
-        case "p": return <p className="leading-7 text-gray-800 mb-4">{children}</p>;
-        case "img": return <img src={node.url} alt={node.alt || ""} className="rounded-xl w-full my-6 aspect-video object-cover bg-gray-100" />;
-        case "a": return <a href={node.url} className="text-blue-600 underline underline-offset-2 hover:text-blue-800">{children}</a>;
-        default: return <div className="leading-relaxed">{children}</div>;
-    }
-}
-
-import useSWR from "swr";
 
 export function PostView({ post }: PostViewProps) {
     // Increment View once
@@ -94,6 +46,15 @@ export function PostView({ post }: PostViewProps) {
 
     // Keep views static for now or distinct state if we want live updates, but usually views are static on load + 1
     const [views] = useState(post?.views || 0);
+
+    // Parse Content safely
+    let plateContent = [];
+    try {
+        plateContent = typeof post?.content === "string" ? JSON.parse(post.content) : post?.content;
+        if (!Array.isArray(plateContent)) plateContent = [];
+    } catch {
+        plateContent = [];
+    }
 
     const handleLike = async () => {
         if (!post?.slug || !likeData) return;
@@ -152,7 +113,11 @@ export function PostView({ post }: PostViewProps) {
                     </div>
 
                     <div className="prose prose-lg prose-gray mx-auto prose-headings:font-bold prose-headings:tracking-tight prose-a:text-foreground prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-img:grayscale hover:prose-img:grayscale-0 transition-all">
-                        <PlateRenderer content={post.content || ""} />
+                        {plateContent.length > 0 ? (
+                            <PlateView content={plateContent} />
+                        ) : (
+                            <div className="text-center text-muted-foreground">No content</div>
+                        )}
                     </div>
 
                     {/* Like Section */}

@@ -58,15 +58,17 @@ export function SearchPageView({ posts, initialQuery = "", currentPage, totalPag
                 <Title as="h1" className="text-4xl md:text-5xl font-serif font-medium text-foreground tracking-tight">
                     Search
                 </Title>
-                <div className="relative group">
-                    <input
-                        value={inputValue}
-                        onChange={(e) => handleSearch(e.target.value)}
-                        placeholder="Type to search..."
-                        className="w-full bg-transparent border-none p-0 text-3xl md:text-5xl font-light placeholder:text-muted-foreground/30 focus:ring-2 focus:ring-primary text-foreground transition-all"
-                        autoFocus
-                    />
-                    {/* Subtle underline animation or indicator could go here, for now just relying on the massive clean text */}
+                <div className="relative max-w-2xl">
+                    <div className="relative group">
+                        <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <input
+                            value={inputValue}
+                            onChange={(e) => handleSearch(e.target.value)}
+                            placeholder="Search stories, people, or tags..."
+                            className="w-full bg-secondary/30 hover:bg-secondary/50 focus:bg-background border border-transparent focus:border-input rounded-full py-4 pl-12 pr-6 text-lg placeholder:text-muted-foreground/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all duration-300"
+                            autoFocus
+                        />
+                    </div>
                 </div>
             </div>
 

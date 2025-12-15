@@ -119,7 +119,9 @@ async function seedCreative() {
         const user = userMap[i % userMap.length]; // Rotate users
 
         const title = postData.title;
-        const slug = slugify(`${user?.username || 'user'}-${title}-${i}`);
+        // Fix TS error: explicit check
+        const safeUsername = user && user.username ? user.username : 'user';
+        const slug = slugify(`${safeUsername}-${title}-${i}`);
 
         const contentNodes = CONTENT_TYPES[postData.type as keyof typeof CONTENT_TYPES](title);
         const content = JSON.stringify(contentNodes);
@@ -139,7 +141,7 @@ async function seedCreative() {
             content,
             coverImage,
             published: true,
-            authorId: user.id!,
+            authorId: user?.id || "unknown", // Safe fallback
             readTime: "3 min read",
             views: Math.floor(Math.random() * 500),
             likesCount: Math.floor(Math.random() * 100),
