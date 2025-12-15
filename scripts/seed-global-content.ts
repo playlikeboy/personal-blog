@@ -190,6 +190,7 @@ async function seedGlobal() {
     const relationsToInsert = [];
 
     for (const user of createdUsers) {
+        if (!user) continue;
         for (let i = 0; i < 10; i++) {
             const topic = TOPICS[Math.floor(Math.random() * TOPICS.length)];
             const title = `${topic}: A Personal Reflection #${i + 1}`;
@@ -198,15 +199,15 @@ async function seedGlobal() {
             // Generate Content
             let contentNodes;
             if (topic === "Poetry") contentNodes = CONTENT_GENERATORS.Poetry(title);
-            else if (topic === "Travel") contentNodes = CONTENT_GENERATORS.Travel(title, user.country || "the world");
+            else if (topic === "Travel") contentNodes = CONTENT_GENERATORS.Travel(title, (user as any).country || "the world");
             else if (topic === "Philosophy") contentNodes = CONTENT_GENERATORS.Philosophy(title);
             else contentNodes = CONTENT_GENERATORS.Default(title, topic);
 
             const content = JSON.stringify(contentNodes);
-            const excerpt = contentNodes.find(n => n.type === 'p')?.children?.[0]?.text?.slice(0, 150) + "...";
+            const excerpt = (contentNodes.find(n => n.type === 'p')?.children?.[0] as any)?.text?.slice(0, 150) + "...";
 
             // Generate Cover Image
-            const encodedPrompt = encodeURIComponent(`${topic} ${user.country} artistic minimalist`);
+            const encodedPrompt = encodeURIComponent(`${topic} ${(user as any).country} artistic minimalist`);
             const coverImage = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=800&height=500&model=flux&nologo=true`;
 
             const postId = crypto.randomUUID();
