@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { posts, tags as tagsTable, postsToTags } from "@/db/schema";
 import { slugify } from "@/lib/utils";
 import { eq } from "drizzle-orm";
+import { searchPosts } from "@/lib/posts";
 
 export async function POST(req: Request) {
     const user = await stackServerApp.getUser();
@@ -73,4 +74,16 @@ export async function POST(req: Request) {
         console.error("Error creating post:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
+}
+
+export async function GET(req: Request) {
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "12", 10);
+    const q = searchParams.get("q") || "";
+
+    // Reuse existing logic from lib/posts
+    const { posts, totalCount } = await searchPosts(q, page, limit);
+
+    return NextResponse.json(posts);
 }

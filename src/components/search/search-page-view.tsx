@@ -8,6 +8,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Title, Text } from "rizzui";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PaginationControl } from "@/components/ui/pagination-control";
+import { useSearchPosts } from "@/hooks/use-search";
+import { useDebounce } from "use-debounce";
 
 interface SearchPageViewProps {
     posts: Post[];
@@ -16,40 +18,37 @@ interface SearchPageViewProps {
     totalPages: number;
 }
 
-export function SearchPageView({ posts, initialQuery = "", currentPage, totalPages }: SearchPageViewProps) {
+export function SearchPageView({ posts: initialPosts, initialQuery = "", currentPage, totalPages }: SearchPageViewProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [inputValue, setInputValue] = useState(initialQuery);
+    const [debouncedQuery] = useDebounce(inputValue, 300);
 
-    // Sync input with URL param changes (e.g. navigation)
+    // Fetch on client side when query changes
+    const { posts: searchResults, isLoading } = useSearchPosts(debouncedQuery);
+
+    // Use initial posts if query matches initialQuery and we are loading or have no data yet
+    // But simpler: just use searchResults if query is present, otherwise initial
+    const displayPosts = debouncedQuery ? searchResults : (debouncedQuery === initialQuery ? initialPosts : []);
+
+    // Update URL silently without full reload
     useEffect(() => {
-        setInputValue(initialQuery);
-    }, [initialQuery]);
+        const params = new URLSearchParams(searchParams.toString());
+        if (debouncedQuery) {
+            params.set("q", debouncedQuery);
+        } else {
+            params.delete("q");
+        }
+        params.delete("page"); // Reset page on new search
+
+        // Shallow push to update URL
+        router.push(`/search?${params.toString()}`);
+    }, [debouncedQuery, router, searchParams]);
+
 
     const handleSearch = (term: string) => {
         setInputValue(term);
     };
-
-    // Debounce effect
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            const params = new URLSearchParams(searchParams.toString());
-            // Reset to page 1 on new search
-            params.set("page", "1");
-            if (inputValue) {
-                params.set("q", inputValue);
-            } else {
-                params.delete("q");
-            }
-            // Only push if different (avoid loops/initial)
-            const currentQ = searchParams.get("q") || "";
-            if (currentQ !== inputValue && !(currentQ === "" && inputValue === "")) {
-                router.push(`/search?${params.toString()}`);
-            }
-        }, 300);
-
-        return () => clearTimeout(timer);
-    }, [inputValue, router, searchParams]);
 
     return (
         <div className="space-y-16 max-w-5xl mx-auto">
@@ -76,14 +75,12 @@ export function SearchPageView({ posts, initialQuery = "", currentPage, totalPag
                 {/* Results Header */}
                 <div className="flex items-center justify-between">
                     <Text className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
-                        {initialQuery ? `Results for "${initialQuery}"` : "Recent Posts"}
+                        {debouncedQuery ? `Results for "${debouncedQuery}"` : "Recent Posts"}
                     </Text>
-                    <Text className="text-xs text-muted-foreground/50">
-                        {posts.length > 0 ? `Page ${currentPage} of ${totalPages}` : ''}
-                    </Text>
+                    {/* Simplified pagination info or removed for infinite scroll future */}
                 </div>
 
-                {posts.length === 0 ? (
+                {displayPosts.length === 0 && !isLoading ? (
                     <div className="py-32 text-center opacity-60">
                         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-secondary/30 mb-6">
                             <MagnifyingGlassIcon className="h-8 w-8 text-muted-foreground" />
@@ -95,9 +92,12 @@ export function SearchPageView({ posts, initialQuery = "", currentPage, totalPag
                     </div>
                 ) : (
                     <>
+                        {isLoading && displayPosts.length === 0 && (
+                            <div className="py-20 text-center text-muted-foreground">Searching...</div>
+                        )}
                         <div className="grid gap-x-12 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
                             <AnimatePresence mode="popLayout">
-                                {posts.map((post) => (
+                                {displayPosts.map((post) => (
                                     <motion.div
                                         key={post.slug}
                                         layout
@@ -110,14 +110,6 @@ export function SearchPageView({ posts, initialQuery = "", currentPage, totalPag
                                     </motion.div>
                                 ))}
                             </AnimatePresence>
-                        </div>
-
-                        <div className="pt-12 border-t border-border/40">
-                            <PaginationControl
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                queryParams={{ q: initialQuery }}
-                            />
                         </div>
                     </>
                 )}

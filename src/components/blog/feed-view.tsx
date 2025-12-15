@@ -9,6 +9,7 @@ import Link from "next/link";
 import { PostCard } from "@/components/blog/post-card";
 
 import { PaginationControl } from "@/components/ui/pagination-control";
+import { usePostFeed } from "@/hooks/use-post-feed";
 
 interface FeedViewProps {
     posts: Post[];
@@ -17,6 +18,11 @@ interface FeedViewProps {
 }
 
 export function FeedView({ posts, currentPage, totalPages }: FeedViewProps) {
+    const { posts: feedPosts, isLoadingMore, isReachingEnd, setSize, size } = usePostFeed({
+        initialPosts: posts,
+        limit: 12
+    });
+
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans text-foreground">
             <Header />
@@ -30,7 +36,7 @@ export function FeedView({ posts, currentPage, totalPages }: FeedViewProps) {
                     </div>
 
                     <div className="space-y-16">
-                        {posts.map((post, index) => (
+                        {feedPosts.map((post: any, index: number) => (
                             <div key={`${post.slug}-${index}`} className="group block">
                                 <Link href={`/posts/${post.slug}`}>
                                     <article className="space-y-4">
@@ -67,11 +73,19 @@ export function FeedView({ posts, currentPage, totalPages }: FeedViewProps) {
                             <Link href="/write" className="underline ml-1">Write the first one.</Link>
                         </div>
                     )}
-
-                    <PaginationControl
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                    />
+                    <div className="pt-20 text-center">
+                        {!isReachingEnd ? (
+                            <button
+                                onClick={() => setSize(size + 1)}
+                                disabled={isLoadingMore}
+                                className="px-8 py-3 bg-secondary/30 hover:bg-secondary/50 text-foreground rounded-full transition-colors disabled:opacity-50"
+                            >
+                                {isLoadingMore ? "Loading..." : "Load more stories"}
+                            </button>
+                        ) : (
+                            <div className="text-muted-foreground text-sm">You are clean ✨</div>
+                        )}
+                    </div>
                 </Container>
             </main>
             <Footer />
