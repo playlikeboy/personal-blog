@@ -65,50 +65,60 @@ const PlateNode = ({ node }: { node: any }) => {
     }
 }
 
-export function PostView({ post }: PostViewProps) {
-    const [likes, setLikes] = useState(post?.likesCount || 0);
-    const [isLiked, setIsLiked] = useState<boolean>(false);
-    const [views, setViews] = useState(post?.views || 0);
-    const [isLoadingLike, setIsLoadingLike] = useState(false);
+import useSWR from "swr";
 
+export function PostView({ post }: PostViewProps) {
+    // Increment View once
     useEffect(() => {
         if (!post?.slug) return;
-
-        // Increment View
         fetch(`/api/posts/${post.slug}/view`, { method: "POST" });
-
-        // Fetch Like Status/Count (fresh)
-        fetch(`/api/posts/${post.slug}/like`)
-            .then(res => res.json() as Promise<{ likesCount?: number; isLiked?: boolean }>)
-            .then(data => {
-                if (data.likesCount !== undefined) setLikes(data.likesCount);
-                if (data.isLiked !== undefined) setIsLiked(data.isLiked);
-            });
     }, [post?.slug]);
 
-    const handleLike = async () => {
-        if (!post?.slug || isLoadingLike) return;
-        setIsLoadingLike(true);
+    const likesCount = post?.likesCount || 0;
 
-        // Optimistic
-        const prevLiked = isLiked;
-        const prevCount = likes;
-        setIsLiked(!prevLiked);
-        setLikes(prev => prevLiked ? prev - 1 : prev + 1);
+    // SWR for Likes
+    const { data: likeData, mutate } = useSWR(
+        post?.slug ? `/api/posts/${post.slug}/like` : null,
+        async (url: string) => {
+            const res = await fetch(url);
+            return res.json() as Promise<{ likesCount: number; isLiked: boolean }>;
+        },
+        {
+            fallbackData: {
+                likesCount: likesCount,
+                isLiked: false
+            },
+            revalidateOnFocus: false
+        }
+    );
+
+    // Keep views static for now or distinct state if we want live updates, but usually views are static on load + 1
+    const [views] = useState(post?.views || 0);
+
+    const handleLike = async () => {
+        if (!post?.slug || !likeData) return;
+
+        // Optimistic Update
+        const newIsLiked = !likeData.isLiked;
+        const newCount = newIsLiked ? likeData.likesCount + 1 : likeData.likesCount - 1;
+
+        mutate({ likesCount: newCount, isLiked: newIsLiked }, false);
 
         try {
             const res = await fetch(`/api/posts/${post.slug}/like`, { method: "POST" });
             if (!res.ok) throw new Error();
-            const data = await res.json() as { liked?: boolean };
-            if (data.liked !== undefined) setIsLiked(data.liked);
+            const data = await res.json() as { liked: boolean };
+
+            // Revalidate to ensure sync
+            mutate({ likesCount: newCount, isLiked: data.liked }); // Update with server verification if needed, or just revalidate
         } catch (e) {
             // Revert
-            setIsLiked(prevLiked);
-            setLikes(prevCount);
-        } finally {
-            setIsLoadingLike(false);
+            mutate(likeData, false);
         }
     };
+
+    const currentLikes = likeData?.likesCount ?? (post?.likesCount || 0);
+    const currentIsLiked = likeData?.isLiked ?? false;
 
     if (!post) {
         return null;
@@ -149,12 +159,11 @@ export function PostView({ post }: PostViewProps) {
                     <div className="mt-16 pt-8 border-t flex justify-center">
                         <Button
                             variant="outline"
-                            className={cn("gap-2 rounded-full", isLiked && "text-red-500 border-red-200 bg-red-50")}
+                            className={cn("gap-2 rounded-full", currentIsLiked && "text-red-500 border-red-200 bg-red-50")}
                             onClick={handleLike}
-                            isLoading={isLoadingLike}
                         >
-                            <Heart className={cn("w-5 h-5", isLiked && "fill-current")} />
-                            {likes} {likes === 1 ? "Like" : "Likes"}
+                            <Heart className={cn("w-5 h-5", currentIsLiked && "fill-current")} />
+                            {currentLikes} {currentLikes === 1 ? "Like" : "Likes"}
                         </Button>
                     </div>
                 </Container>

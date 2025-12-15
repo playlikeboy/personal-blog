@@ -119,7 +119,7 @@ async function seedCreative() {
         const user = userMap[i % userMap.length]; // Rotate users
 
         const title = postData.title;
-        const slug = slugify(`${user.username}-${title}-${i}`);
+        const slug = slugify(`${user?.username || 'user'}-${title}-${i}`);
 
         const contentNodes = CONTENT_TYPES[postData.type as keyof typeof CONTENT_TYPES](title);
         const content = JSON.stringify(contentNodes);
