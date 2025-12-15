@@ -2,7 +2,7 @@
 
 > **"Write your story. Share your voice."**
 
-Unstory.live is a story-first writing platform designed to help people express their experiences, ideas, emotions, and memories freely. Unlike traditional blogging websites, we focus on emotional expression, personal storytelling, and minimal distraction.
+Unstory.live is a story-first writing platform designed to help people express their experiences, ideas, emotions, creative writing(poems, shayri, stories articles, blogs, etc.) and memories freely. Unlike traditional blogging websites, we focus on emotional expression, personal storytelling, and minimal distraction.
 
 ![Unstory Banner](https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=2666&auto=format&fit=crop)
 

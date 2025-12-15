@@ -20,24 +20,21 @@ export function AboutContent() {
                     <section>
                         <Title as="h2" className="text-2xl font-serif font-medium mb-4">Why Unstory?</Title>
                         <p>
-                            The internet has become loud. Algorithms dictate what we see, and vanity metrics dictate what we write.
-                            <strong>Unstory.live</strong> was born from a desire to return to the essence of blogging: human connection through storytelling.
+                            Unstory.live is a story-first writing platform designed to help people express their experiences, ideas, emotions, creative writing (poems, shayri, stories, articles, blogs, etc.) and memories freely.
+                        </p>
+                        <p className="mt-4">
+                            Unlike traditional blogging websites, we focus on emotional expression, personal storytelling, and minimal distraction. We believe that the environment shapes the art. Our platform is designed with "Calm Design" principles—soft colors, generous whitespace, and minimal distractions—so you can enter a flow state and write from the heart.
                         </p>
                     </section>
 
                     <section>
-                        <Title as="h2" className="text-2xl font-serif font-medium mb-4">Calm Design</Title>
-                        <p>
-                            We believe that the environment shapes the art. Our platform is designed with "Calm Design" principles—soft colors, generous whitespace, and minimal distractions—so you can enter a flow state and write from the heart.
-                        </p>
-                    </section>
-
-                    <section>
-                        <Title as="h2" className="text-2xl font-serif font-medium mb-4">Community, Not Crowds</Title>
-                        <p>
-                            We value depth over breadth. View counts are private. There are no public "likes" to chase.
-                            Instead, we foster a community where appreciation is genuine and feedback is meaningful.
-                        </p>
+                        <Title as="h2" className="text-2xl font-serif font-medium mb-4">Our Vision</Title>
+                        <ul className="list-disc pl-5 space-y-2 marker:text-gray-300">
+                            <li><strong>Emotional expression</strong> over technical writing.</li>
+                            <li><strong>Flow-state writing</strong> environment.</li>
+                            <li><strong>Reader immersion</strong> with calm design.</li>
+                            <li><strong>Community</strong> based on appreciation, not vanity metrics.</li>
+                        </ul>
                     </section>
 
                     <section className="pt-8 border-t border-gray-100">
@@ -47,6 +44,6 @@ export function AboutContent() {
                     </section>
                 </div>
             </Container>
-        </main>
+        </main >
     );
 }
