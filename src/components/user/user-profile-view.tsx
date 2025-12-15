@@ -270,7 +270,6 @@ export function UserProfileView({ username }: UserProfileViewProps) {
                 </Container>
             </main>
             <Footer />
-            <Footer />
 
             <FollowsModal
                 isOpen={!!activeModal}

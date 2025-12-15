@@ -82,6 +82,7 @@ const jsonLd = {
 
 import { Providers } from "./providers";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
+import { BottomNav } from "@/components/layout/bottom-nav";
 
 export default function RootLayout({
 	children,
@@ -101,7 +102,10 @@ export default function RootLayout({
 							dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 						/>
 						<Providers>
-							{children}
+							<div className="pb-24 md:pb-0 min-h-screen">
+								{children}
+							</div>
+							<BottomNav />
 							<InstallPrompt />
 						</Providers>
 					</StackTheme>

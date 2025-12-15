@@ -3,11 +3,12 @@
 import { Container } from "@/components/ui/container";
 import { Button, Title, Text, Grid } from "rizzui";
 import Link from "next/link";
-import { ArrowRightIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, CheckIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { useUser } from "@stackframe/stack";
 import { Post } from "@/lib/posts";
 import NextImage from "next/image";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import { getPostImage } from "@/lib/image-utils";
 import { formatDate } from "@/lib/utils";
 
@@ -121,10 +122,42 @@ export function HomeView({ topAuthorPosts, featuredPost, recentPosts }: HomeView
                     </section>
                 )}
 
-                {/* Masonry-ish Grid for Recent */}
+                {/* Lazy Section 1: Manifesto */}
+                <motion.section
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-20%" }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="py-32 bg-foreground text-background relative overflow-hidden"
+                >
+                    <div className="absolute top-0 right-0 p-20 opacity-10 pointer-events-none">
+                        <SparklesIcon className="w-96 h-96" />
+                    </div>
+                    <Container className="relative z-10 text-center space-y-8">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-background/20 text-sm font-medium tracking-wider uppercase opacity-80 backdrop-blur-sm">
+                            <span className="w-2 h-2 rounded-full bg-background animate-pulse" />
+                            The Philosophy
+                        </div>
+                        <h3 className="text-4xl md:text-6xl lg:text-7xl font-serif font-medium leading-[1.1] max-w-4xl mx-auto">
+                            Writing is <span className="italic opacity-70">thinking</span> on paper. <br className="hidden md:block" />
+                            Share your rawest ideas.
+                        </h3>
+                        <p className="text-lg md:text-xl text-background/70 max-w-2xl mx-auto font-light leading-relaxed">
+                            No algorithms. No distractions. Just pure expression. Join a community of thinkers, creators, and storytellers who value depth over clicks.
+                        </p>
+                    </Container>
+                </motion.section>
+
+                {/* Lazy Section 2: Editor's Choice */}
                 <section className="py-24 pb-40">
                     <Container>
-                        <div className="flex items-end justify-between mb-20">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            className="flex items-end justify-between mb-20"
+                        >
                             <h3 className="text-8xl font-serif text-gray-100 dark:text-gray-900 leading-none -ml-4 select-none absolute z-0">
                                 Selected
                             </h3>
@@ -134,41 +167,80 @@ export function HomeView({ topAuthorPosts, featuredPost, recentPosts }: HomeView
                                     View Profile
                                 </Link>
                             </div>
-                        </div>
+                        </motion.div>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16 relative z-10">
-                            {topAuthorPosts.map((post) => (
-                                <Link key={post.slug} href={`/posts/${post.slug}`} className="group flex flex-col space-y-6">
-                                    <div className="aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-900 relative">
-                                        {isValidImage(post.coverImage) ? (
-                                            <NextImage
-                                                src={post.coverImage}
-                                                alt={post.title}
-                                                fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full p-8 flex flex-col justify-between bg-secondary/10 hover:bg-secondary/20 transition-colors">
-                                                <span className="text-6xl font-serif text-muted-foreground/10">&quot;</span>
+                            {topAuthorPosts.map((post, i) => (
+                                <motion.div
+                                    key={post.slug}
+                                    initial={{ opacity: 0, y: 40 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.6, delay: i * 0.1 }}
+                                >
+                                    <Link href={`/posts/${post.slug}`} className="group flex flex-col space-y-6">
+                                        <div className="aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-900 relative">
+                                            {isValidImage(post.coverImage) ? (
+                                                <NextImage
+                                                    src={post.coverImage}
+                                                    alt={post.title}
+                                                    fill
+                                                    className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full p-8 flex flex-col justify-between bg-secondary/10 hover:bg-secondary/20 transition-colors">
+                                                    <span className="text-6xl font-serif text-muted-foreground/10">&quot;</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="space-y-3">
+                                            <div className="flex items-center justify-between text-xs font-bold tracking-widest uppercase text-muted-foreground">
+                                                <span className="group-hover:text-accent transition-colors">{post.tags?.[0] || 'Unstory'}</span>
+                                                <span className="font-medium opacity-60">{post.readTime}</span>
                                             </div>
-                                        )}
-                                    </div>
-                                    <div className="space-y-3">
-                                        <div className="flex items-center justify-between text-xs font-bold tracking-widest uppercase text-muted-foreground">
-                                            <span className="group-hover:text-accent transition-colors">{post.tags?.[0] || 'Unstory'}</span>
-                                            <span className="font-medium opacity-60">{post.readTime}</span>
+                                            <h4 className="text-2xl font-serif font-medium leading-snug group-hover:underline decoration-1 underline-offset-4 decoration-accent/50">
+                                                {post.title}
+                                            </h4>
+                                            <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed font-light">
+                                                {post.excerpt}
+                                            </p>
+                                            <div className="pt-2 text-xs text-muted-foreground/60 font-medium">
+                                                {formatDate(post.date)}
+                                            </div>
                                         </div>
-                                        <h4 className="text-2xl font-serif font-medium leading-snug group-hover:underline decoration-1 underline-offset-4 decoration-accent/50">
-                                            {post.title}
-                                        </h4>
-                                        <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed font-light">
-                                            {post.excerpt}
-                                        </p>
-                                        <div className="pt-2 text-xs text-muted-foreground/60 font-medium">
-                                            {formatDate(post.date)}
-                                        </div>
-                                    </div>
-                                </Link>
+                                    </Link>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </Container>
+                </section>
+
+                {/* Lazy Section 3: Trending Topics */}
+                <section className="py-24 border-y border-gray-100 dark:border-gray-900 bg-secondary/5">
+                    <Container>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            className="text-center mb-16"
+                        >
+                            <Title as="h2" className="text-2xl font-serif font-medium mb-4">Trending Topics</Title>
+                            <Text className="text-muted-foreground font-light">Explore what the world is thinking about.</Text>
+                        </motion.div>
+
+                        <div className="flex flex-wrap justify-center gap-4">
+                            {["Technology", "Philosophy", "Design", "Life", "Culture", "Future", "Writing", "Minimalism", "Art", "Psychology"].map((topic, i) => (
+                                <motion.div
+                                    key={topic}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.05 }}
+                                >
+                                    <Link href={`/search?q=${topic}`} className="px-8 py-4 rounded-full bg-background border border-border/50 hover:border-foreground/50 hover:bg-foreground hover:text-background transition-all duration-300 text-lg font-medium cursor-pointer">
+                                        #{topic}
+                                    </Link>
+                                </motion.div>
                             ))}
                         </div>
                     </Container>
