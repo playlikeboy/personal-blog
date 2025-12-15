@@ -126,10 +126,10 @@ export function HomeView({ topAuthorPosts, featuredPost, recentPosts }: HomeView
                     <Container>
                         <div className="flex items-end justify-between mb-20">
                             <h3 className="text-8xl font-serif text-gray-100 dark:text-gray-900 leading-none -ml-4 select-none absolute z-0">
-                                Author
+                                Selected
                             </h3>
                             <div className="relative z-10 w-full flex justify-between items-end">
-                                <Title as="h2" className="text-3xl font-serif font-medium">Top Author Publishings</Title>
+                                <Title as="h2" className="text-3xl font-serif font-medium">Editor&apos;s Choice</Title>
                                 <Link href="/u/sh20raj" className="text-sm font-medium border-b border-foreground pb-0.5 hover:opacity-60 transition-opacity">
                                     View Profile
                                 </Link>
@@ -149,13 +149,14 @@ export function HomeView({ topAuthorPosts, featuredPost, recentPosts }: HomeView
                                             />
                                         ) : (
                                             <div className="w-full h-full p-8 flex flex-col justify-between bg-secondary/10 hover:bg-secondary/20 transition-colors">
-                                                <span className="text-6xl font-serif text-muted-foreground/10">"</span>
+                                                <span className="text-6xl font-serif text-muted-foreground/10">&quot;</span>
                                             </div>
                                         )}
                                     </div>
                                     <div className="space-y-3">
-                                        <div className="text-xs font-bold tracking-widest uppercase text-muted-foreground group-hover:text-accent transition-colors">
-                                            {post.tags?.[0] || 'Unstory'}
+                                        <div className="flex items-center justify-between text-xs font-bold tracking-widest uppercase text-muted-foreground">
+                                            <span className="group-hover:text-accent transition-colors">{post.tags?.[0] || 'Unstory'}</span>
+                                            <span className="font-medium opacity-60">{post.readTime}</span>
                                         </div>
                                         <h4 className="text-2xl font-serif font-medium leading-snug group-hover:underline decoration-1 underline-offset-4 decoration-accent/50">
                                             {post.title}
@@ -163,6 +164,9 @@ export function HomeView({ topAuthorPosts, featuredPost, recentPosts }: HomeView
                                         <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed font-light">
                                             {post.excerpt}
                                         </p>
+                                        <div className="pt-2 text-xs text-muted-foreground/60 font-medium">
+                                            {formatDate(post.date)}
+                                        </div>
                                     </div>
                                 </Link>
                             ))}
