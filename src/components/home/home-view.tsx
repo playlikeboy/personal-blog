@@ -209,6 +209,15 @@ export function HomeView({ topAuthorPosts, featuredPost, recentPosts }: HomeView
                                 </Link>
                             ))}
                         </div>
+
+                        <div className="mt-12 flex justify-center">
+                            <Link href="/search">
+                                <Button variant="outline" size="lg" className="rounded-full px-8 gap-2">
+                                    Show More Stories
+                                    <ArrowRightIcon className="w-4 h-4" />
+                                </Button>
+                            </Link>
+                        </div>
                     </Container>
                 </section>
             </main>

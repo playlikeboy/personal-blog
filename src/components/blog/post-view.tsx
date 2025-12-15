@@ -50,15 +50,17 @@ const PlateNode = ({ node }: { node: any }) => {
     });
 
     switch (node.type) {
-        case "h1": return <h1 className="text-3xl font-bold mt-8 mb-4">{children}</h1>;
-        case "h2": return <h2 className="text-2xl font-bold mt-6 mb-3">{children}</h2>;
-        case "h3": return <h3 className="text-xl font-bold mt-4 mb-2">{children}</h3>;
-        case "blockquote": return <blockquote className="border-l-4 border-gray-300 pl-4 italic my-4">{children}</blockquote>;
-        case "ul": return <ul className="list-disc list-inside my-4 space-y-1">{children}</ul>;
-        case "ol": return <ol className="list-decimal list-inside my-4 space-y-1">{children}</ol>;
-        case "li": return <li>{children}</li>;
-        case "p": return <p className="leading-relaxed text-gray-700">{children}</p>;
-        case "a": return <a href={node.url} className="text-blue-600 hover:underline">{children}</a>;
+        // Downshift headings to avoid conflict with main Page Title
+        case "h1": return <h2 className="text-3xl font-bold mt-8 mb-4">{children}</h2>;
+        case "h2": return <h3 className="text-2xl font-bold mt-6 mb-3">{children}</h3>;
+        case "h3": return <h4 className="text-xl font-bold mt-4 mb-2">{children}</h4>;
+        case "blockquote": return <blockquote className="border-l-4 border-gray-200 pl-4 italic my-6 text-gray-600 font-serif text-lg">{children}</blockquote>;
+        case "ul": return <ul className="list-disc list-outside ml-6 my-4 space-y-2">{children}</ul>;
+        case "ol": return <ol className="list-decimal list-outside ml-6 my-4 space-y-2">{children}</ol>;
+        case "li": return <li className="pl-1">{children}</li>;
+        case "p": return <p className="leading-7 text-gray-800 mb-4">{children}</p>;
+        case "img": return <img src={node.url} alt={node.alt || ""} className="rounded-xl w-full my-6 aspect-video object-cover bg-gray-100" />;
+        case "a": return <a href={node.url} className="text-blue-600 underline underline-offset-2 hover:text-blue-800">{children}</a>;
         default: return <div className="leading-relaxed">{children}</div>;
     }
 }
