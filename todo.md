@@ -5,3 +5,8 @@ tweets will have a different icon and color and
 tweet will have a title(very optional) and tweet in the schema.
 
 add a search bar to search tweets and posts
+
+
+---
+
+Add comments feature to posts and tweets and create separate page for showing comments keep things minimal and clean 
