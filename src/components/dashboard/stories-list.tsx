@@ -8,7 +8,11 @@ import { Footer } from "@/components/layout/footer";
 import { Title, Text, Button } from "rizzui";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { Eye, Heart } from "lucide-react";
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
+import { EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { Fragment, useState } from "react";
 import { Post } from "@/lib/posts";
+import { cn } from "@/lib/utils";
 
 interface StoriesListProps {
     posts: Post[];
@@ -78,9 +82,55 @@ export function StoriesList({ posts }: StoriesListProps) {
                                             </div>
                                         </div>
                                     </div>
-                                    <Link href={`/write?slug=${post.slug}`}>
-                                        <Button variant="outline" size="sm">Edit</Button>
-                                    </Link>
+                                    <Menu as="div" className="relative ml-3">
+                                        <MenuButton className="p-2 -m-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors">
+                                            <span className="sr-only">Open options</span>
+                                            <EllipsisVerticalIcon className="w-6 h-6" aria-hidden="true" />
+                                        </MenuButton>
+                                        <Transition
+                                            as={Fragment}
+                                            enter="transition ease-out duration-100"
+                                            enterFrom="transform opacity-0 scale-95"
+                                            enterTo="transform opacity-100 scale-100"
+                                            leave="transition ease-in duration-75"
+                                            leaveFrom="transform opacity-100 scale-100"
+                                            leaveTo="transform opacity-0 scale-95"
+                                        >
+                                            <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white dark:bg-gray-900 shadow-lg ring-1 ring-black/5 focus:outline-none border border-gray-100 dark:border-gray-800">
+                                                <div className="p-1">
+                                                    <MenuItem>
+                                                        {({ focus }) => (
+                                                            <Link
+                                                                href={`/write?slug=${post.slug}`}
+                                                                className={cn(
+                                                                    focus ? 'bg-gray-50 dark:bg-gray-800' : '',
+                                                                    'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground transition-colors'
+                                                                )}
+                                                            >
+                                                                <PencilSquareIcon className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
+                                                                Edit Story
+                                                            </Link>
+                                                        )}
+                                                    </MenuItem>
+                                                    <MenuItem>
+                                                        {({ focus }) => (
+                                                            <button
+                                                                // onClick={() => handleDelete(post.slug)} // Implement delete handler
+                                                                className={cn(
+                                                                    focus ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400' : 'text-red-600 dark:text-red-500',
+                                                                    'group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors'
+                                                                )}
+                                                            >
+                                                                <TrashIcon className={cn("h-4 w-4", focus ? "text-red-700" : "text-red-500")} />
+                                                                Delete
+                                                                <span className="text-[10px] ml-auto uppercase opacity-50 border border-current px-1 rounded">Dev</span>
+                                                            </button>
+                                                        )}
+                                                    </MenuItem>
+                                                </div>
+                                            </MenuItems>
+                                        </Transition>
+                                    </Menu>
                                 </div>
                             ))}
                         </div>
