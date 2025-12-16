@@ -81,7 +81,7 @@ export function FeedView({ posts, currentPage, totalPages, title = "Your Feed", 
                                 <Link href={`/posts/${post.slug}`}>
                                     <article className="space-y-4">
                                         <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">
-                                            <span className="text-accent">{post.tags?.[0] || "Story"}</span>
+                                            <span className="text-muted-foreground bg-muted-background px-2 py-0.5 rounded-md text-[10px] font-bold">{post.tags?.[0] || "Story"}</span>
                                             <span>•</span>
                                             <span>{new Date(post.date).toLocaleDateString()}</span>
                                         </div>
