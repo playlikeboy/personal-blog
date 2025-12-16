@@ -39,7 +39,7 @@ export function Footer() {
                         <Link href="/rss.xml" className="text-sm font-medium text-gray-500 hover:text-foreground transition-colors">
                             RSS
                         </Link>
-                        <Link href="/sitemap.xml" className="text-sm font-medium text-gray-500 hover:text-foreground transition-colors">
+                        <Link href="/sitemap.xml" className="text-sm hidden md:block font-medium text-gray-500 hover:text-foreground transition-colors">
                             Sitemap
                         </Link>
                     </nav>
