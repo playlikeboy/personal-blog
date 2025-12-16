@@ -6,6 +6,7 @@ import { Button } from "rizzui";
 import { useState, useEffect } from "react";
 import type { Value } from 'platejs';
 import { useRouter, useSearchParams } from "next/navigation";
+import { useUser } from "@stackframe/stack";
 import Link from "next/link";
 import { UserMenu } from "@/components/layout/user-menu";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
@@ -17,6 +18,7 @@ export default function WritePage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const editSlug = searchParams.get("slug");
+    const user = useUser();
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState<Value>(defaultValue);
@@ -134,7 +136,7 @@ export default function WritePage() {
                             <ArrowLeftIcon className="h-4 w-4 text-gray-500 group-hover:text-foreground transition-colors" />
                         </Link>
                         <span className="text-sm text-gray-400">
-                            {editSlug ? "Editing" : "Draft"} in <span className="text-foreground font-medium">Shaswat&apos;s Blog</span>
+                            {editSlug ? "Editing" : "Draft"} in <span className="text-foreground font-medium">{user?.displayName ? `${user.displayName.split(" ")[0]}'s` : "Your"} Blog</span>
                         </span>
                     </div>
 

@@ -15,9 +15,11 @@ interface FeedViewProps {
     posts: Post[];
     currentPage: number;
     totalPages: number;
+    title?: string;
+    description?: string;
 }
 
-export function FeedView({ posts, currentPage, totalPages }: FeedViewProps) {
+export function FeedView({ posts, currentPage, totalPages, title = "Your Feed", description = "Curated stories from the Unstory community." }: FeedViewProps) {
     const { posts: feedPosts, isLoadingMore, isReachingEnd, setSize, size } = usePostFeed({
         initialPosts: posts,
         limit: 12
@@ -29,9 +31,9 @@ export function FeedView({ posts, currentPage, totalPages }: FeedViewProps) {
             <main className="flex-1 py-16 md:py-24">
                 <Container className="max-w-3xl">
                     <div className="mb-20 text-center space-y-4">
-                        <Title as="h1" className="text-4xl md:text-5xl font-serif font-medium tracking-tight">Your Feed</Title>
+                        <Title as="h1" className="text-4xl md:text-5xl font-serif font-medium tracking-tight">{title}</Title>
                         <Text className="text-lg text-muted-foreground font-light max-w-lg mx-auto">
-                            Curated stories from the Unstory community.
+                            {description}
                         </Text>
                     </div>
 
@@ -88,7 +90,6 @@ export function FeedView({ posts, currentPage, totalPages }: FeedViewProps) {
                     </div>
                 </Container>
             </main>
-            <Footer />
         </div>
     );
 }

@@ -23,7 +23,7 @@ export function usePostFeed({ initialPosts, limit = 12 }: UsePostFeedProps = {})
     };
 
     const { data, error, size, setSize, isLoading } = useSWRInfinite(getKey, fetcher, {
-        fallbackData: initialPosts ? [initialPosts] : undefined,
+        fallbackData: initialPosts ? [{ posts: initialPosts, totalCount: 0 }] : undefined,
         revalidateFirstPage: false, // Don't refetch page 1 immediately if we have initial data
     });
 
