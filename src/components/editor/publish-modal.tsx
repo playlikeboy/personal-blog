@@ -21,6 +21,7 @@ export interface PublishData {
     excerpt: string;
     tags: string[];
     coverImage: string;
+    published?: boolean;
 }
 
 export function PublishModal({ isOpen, onClose, onConfirm, postTitle, postContext, initialTags }: PublishModalProps) {

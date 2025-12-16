@@ -10,9 +10,9 @@ interface UseSearchPostsProps {
 }
 
 export function useSearchPosts({ query, page = 1, limit = 12 }: UseSearchPostsProps) {
-    const { data, error, isLoading } = useSWR(
+    const { data, error, isLoading } = useSWR<{ posts: Post[], totalCount: number }>(
         query ? `/api/posts?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}` : null,
-        fetcher,
+        fetcher as any,
         {
             keepPreviousData: true, // Keep data while loading new page
         }

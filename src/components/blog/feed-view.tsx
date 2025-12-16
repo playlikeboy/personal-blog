@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Title, Text } from "rizzui";
+import { useState } from "react";
 import { Post } from "@/lib/posts";
 import Link from "next/link";
 import { PostCard } from "@/components/blog/post-card";
@@ -19,10 +20,23 @@ interface FeedViewProps {
     description?: string;
 }
 
-export function FeedView({ posts, currentPage, totalPages, title = "Your Feed", description = "Curated stories from the Unstory community." }: FeedViewProps) {
+// ... imports
+import { Select } from "rizzui"; // Check if Select exists in rizzui or use native/custom
+
+// ... FeedViewProps
+
+export function FeedView({ posts, currentPage, totalPages, title = "Your Feed", description = "Curated stories from the Unstory community.", initialSort = "latest" }: FeedViewProps & { initialSort?: "latest" | "popular" | "random" }) {
+    const [sort, setSort] = useState<"latest" | "popular" | "random">(initialSort);
+
+    // Reset initialPosts if sort changes? 
+    // If user switches sort, initialPosts (which are SSR'd) are invalid for the new sort.
+    // We should pass `undefined` as initialPosts to usePostFeed if sort != initialSort.
+    // Or just let SWR handle it (if key changes, it fetches).
+
     const { posts: feedPosts, isLoadingMore, isReachingEnd, setSize, size } = usePostFeed({
-        initialPosts: posts,
-        limit: 12
+        initialPosts: sort === initialSort ? posts : undefined,
+        limit: 12,
+        sort
     });
 
     return (
@@ -35,6 +49,30 @@ export function FeedView({ posts, currentPage, totalPages, title = "Your Feed", 
                         <Text className="text-lg text-muted-foreground font-light max-w-lg mx-auto">
                             {description}
                         </Text>
+
+                        {/* Sorting Controls */}
+                        <div className="flex justify-center pt-6">
+                            <div className="inline-flex p-1 bg-secondary/30 rounded-full">
+                                <button
+                                    onClick={() => setSort("latest")}
+                                    className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${sort === "latest" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                                >
+                                    Latest
+                                </button>
+                                <button
+                                    onClick={() => setSort("popular")}
+                                    className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${sort === "popular" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                                >
+                                    Popular
+                                </button>
+                                <button
+                                    onClick={() => setSort("random")}
+                                    className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${sort === "random" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                                >
+                                    Random
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="space-y-16">

@@ -6,25 +6,25 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 interface UsePostFeedProps {
     initialPosts?: Post[];
     limit?: number;
+    sort?: "latest" | "popular" | "random";
 }
 
-export function usePostFeed({ initialPosts, limit = 12 }: UsePostFeedProps = {}) {
+export function usePostFeed({ initialPosts, limit = 12, sort = "latest" }: UsePostFeedProps = {}) {
     const getKey = (pageIndex: number, previousPageData: any) => {
         // Reached the end
         if (previousPageData && !previousPageData.length) return null;
 
-        // First page, we might want to use initial data or just fetch
-        // Note: SWRInfinite + initialData is tricky. 
-        // Usually standard pattern: fetch from page 1 always or start from page 2 if hydrating.
-        // For simplicity: we'll start fetching from page 1 (or 2 if we assume initial is page 1)
-
-        // Simplest approach: /api/posts?page=X
-        return `/api/posts?page=${pageIndex + 1}&limit=${limit}`;
+        // Simplest approach: /api/posts?page=X&sort=Y
+        return `/api/posts?page=${pageIndex + 1}&limit=${limit}&sort=${sort}`;
     };
 
     const { data, error, size, setSize, isLoading } = useSWRInfinite(getKey, fetcher, {
         fallbackData: initialPosts ? [{ posts: initialPosts, totalCount: 0 }] : undefined,
-        revalidateFirstPage: false, // Don't refetch page 1 immediately if we have initial data
+        revalidateFirstPage: false, // Don't refetch page 1 immediately if we have initial data (unless sort changes?)
+        // Actually if sort changes, fallbackData might be stale if passed.
+        // SWR handles key changes by resetting, but fallbackData is tied to hook init.
+        // If sorting changes, initialPosts (if provided) might not match the new sort.
+        // Ideally initialPosts matches the 'sort' prop default.
     });
 
     const posts = data ? data.flatMap((page: any) => page.posts) : [];

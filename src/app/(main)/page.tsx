@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { posts } from "@/db/schema";
 import { desc, eq, count } from "drizzle-orm";
-import { mapDbPostToPost } from "@/lib/posts";
+import { mapDbPostToPost, searchPosts } from "@/lib/posts";
 import { FeedView } from "@/components/blog/feed-view";
 
 export const dynamic = 'force-dynamic';
@@ -20,38 +20,18 @@ export default async function Home({ searchParams }: HomePageProps) {
 
     const conditions = eq(posts.published, true);
 
-    // Get Total Count
-    const [{ count: total }] = await db
-        .select({ count: count() })
-        .from(posts)
-        .where(conditions);
-
-    const totalPages = Math.ceil(total / limit);
-
-    const dbPosts = await db.query.posts.findMany({
-        where: conditions,
-        orderBy: [desc(posts.createdAt)],
-        limit,
-        offset,
-        with: {
-            author: true,
-            tags: {
-                with: {
-                    tag: true
-                }
-            }
-        }
-    });
-
-    const mappedPosts = dbPosts.map(mapDbPostToPost);
+    // Default to Popular feed for Homepage
+    const { posts: dbPosts, totalCount } = await searchPosts("", pageNum, limit, "popular");
+    const totalPages = Math.ceil(totalCount / limit);
 
     return (
         <FeedView
-            posts={mappedPosts}
+            posts={dbPosts}
             currentPage={pageNum}
             totalPages={totalPages}
             title="Unstory"
             description="A space for words, thoughts, and the people behind them."
+            initialSort="popular"
         />
     );
 }

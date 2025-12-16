@@ -20,8 +20,9 @@ export async function POST(req: Request) {
             coverImage?: string;
             excerpt?: string;
             tags?: string[];
+            published?: boolean;
         };
-        const { title, content, coverImage, excerpt, tags } = body;
+        const { title, content, coverImage, excerpt, tags, published } = body;
 
         if (!title || !content) {
             return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
             coverImage,
             excerpt,
             authorId: user.id,
-            published: true, // Auto-publish for now
+            published: typeof body.published === 'boolean' ? body.published : true, // Respect draft status
             readTime: "5 min read", // Placeholder
         }).returning();
 
@@ -81,9 +82,10 @@ export async function GET(req: Request) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "12", 10);
     const q = searchParams.get("q") || "";
+    const sort = (searchParams.get("sort") as "latest" | "popular" | "random") || "latest";
 
     // Reuse existing logic from lib/posts
-    const { posts, totalCount } = await searchPosts(q, page, limit);
+    const { posts, totalCount } = await searchPosts(q, page, limit, sort);
 
     return NextResponse.json({ posts, totalCount });
 }

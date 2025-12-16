@@ -109,7 +109,11 @@ export default function WritePage() {
                     localStorage.removeItem("draft-content");
                 }
                 const post = await res.json() as { slug: string };
-                router.push(`/posts/${post.slug}`);
+                if (data.published === false) {
+                    router.push("/dashboard");
+                } else {
+                    router.push(`/posts/${post.slug}`);
+                }
             } else {
                 console.error("Failed to save post");
             }
