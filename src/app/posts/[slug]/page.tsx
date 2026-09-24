@@ -37,30 +37,48 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
         };
     }
 
-    const ogImage = post.coverImage || "https://minimal.strivio.world/og-default.jpg"; // Replace with actual default
+    const ogImage = post.coverImage || "https://stack-shade.github.io/og-default.jpg";
+    const description = post.excerpt || `Read ${post.title} on Stack Shade.`;
+    const keywords = [
+        post.title,
+        ...(post.tags || []),
+        "AI",
+        "machine learning",
+        "developer tools",
+        "software engineering",
+        "technology",
+    ];
 
     return {
         title: post.title,
-        description: post.excerpt || `Read ${post.title} on Minimal.`,
+        description,
+        keywords,
+        authors: [{ name: post.author?.name || "Stack Shade" }],
+        creator: post.author?.name || "Stack Shade",
+        publisher: "Stack Shade",
+        alternates: {
+            canonical: `https://stack-shade.github.io/posts/${post.slug}`,
+        },
         openGraph: {
             title: post.title,
-            description: post.excerpt || `Read ${post.title} on Minimal.`,
+            description,
             type: "article",
             publishedTime: post.date ? new Date(post.date).toISOString() : undefined,
-            authors: [post.author?.name || "Minimal Author"],
+            authors: [post.author?.name || "Stack Shade"],
+            siteName: "Stack Shade",
             images: [
                 {
                     url: ogImage,
-                    width: 1200,
-                    height: 630,
-                    alt: post.title,
+                    width: 1600,
+                    height: 900,
+                    alt: `${post.title} — Stack Shade`,
                 },
             ],
         },
         twitter: {
             card: "summary_large_image",
             title: post.title,
-            description: post.excerpt || `Read ${post.title} on Minimal.`,
+            description,
             images: [ogImage],
         },
     };
@@ -92,15 +110,13 @@ export default async function PostPage({ params }: PostPageProps) {
         },
         publisher: {
             "@type": "Organization",
-            name: "Minimal",
-            logo: {
-                "@type": "ImageObject",
-                url: "https://minimal.strivio.world/logo.png" // Placeholder
-            }
+            name: "Stack Shade",
+            url: "https://stack-shade.github.io/"
         },
+        keywords: post.tags || [],
         mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": `https://minimal.strivio.world/posts/${post.slug}`
+            "@id": `https://stack-shade.github.io/posts/${post.slug}`
         }
     };
 
