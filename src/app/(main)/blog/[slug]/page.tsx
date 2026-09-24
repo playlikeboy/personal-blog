@@ -60,8 +60,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         notFound();
     }
 
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: post.title,
+        description: post.excerpt,
+        image: post.coverImage ? [post.coverImage] : [],
+        datePublished: post.date ? new Date(post.date).toISOString() : undefined,
+        author: { "@type": "Person", name: post.author?.name || "Stack Shade" },
+        publisher: { "@type": "Organization", name: "Stack Shade", url: "https://stack-shade.github.io/" },
+        keywords: post.tags || [],
+        mainEntityOfPage: { "@type": "WebPage", "@id": `https://stack-shade.github.io/blog/${post.slug}` }
+    };
+
     return (
-        <div className="min-h-screen bg-background">
+        <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+            <div className="min-h-screen bg-background">
             <ScrollProgress />
             <div className="py-12 md:py-20">
                 <Container as="article" className="max-w-3xl">
