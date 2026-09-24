@@ -14,6 +14,44 @@ interface BlogPostPageProps {
     }>;
 }
 
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+    const { slug } = await params;
+    const post = await getPostBySlug(slug);
+
+    if (!post) return { title: "Post Not Found" };
+
+    const description = post.excerpt || `Read ${post.title} on Stack Shade.`;
+    const ogImage = post.coverImage || "https://stack-shade.github.io/og-default.jpg";
+
+    return {
+        title: post.title,
+        description,
+        keywords: [post.title, ...(post.tags || []), "AI", "machine learning", "software engineering", "developer tools", "technology"],
+        authors: [{ name: post.author?.name || "Stack Shade" }],
+        creator: post.author?.name || "Stack Shade",
+        publisher: "Stack Shade",
+        alternates: { canonical: `https://stack-shade.github.io/blog/${post.slug}` },
+        openGraph: {
+            title: post.title,
+            description,
+            type: "article",
+            siteName: "Stack Shade",
+            publishedTime: post.date ? new Date(post.date).toISOString() : undefined,
+            authors: [post.author?.name || "Stack Shade"],
+            images: [{ url: ogImage, width: 1600, height: 900, alt: `${post.title} — Stack Shade` }],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: post.title,
+            description,
+            images: [ogImage],
+        },
+        robots: { index: true, follow: true },
+    };
+}
+
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const { slug } = await params;
     const post = await getPostBySlug(slug);
